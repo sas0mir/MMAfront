@@ -1,0 +1,21 @@
+{
+  "name": "smi_analytics_front",
+  "version": "1.0.0",
+  "description": "frontend for smi-analytics project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.i-novus.ru/grp/smi_analytics_front.git"
+  },
+  "keywords": [
+    "smi",
+    "telegram",
+    "google",
+    "yandex"
+  ],
+  "author": "i-novus",
+  "license": "MIT"
+}
