@@ -1,4 +1,4 @@
-# smi_analytics_fromt
+# smi_analytics_front
 
 ## Project setup
 ```
