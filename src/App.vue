@@ -1,34 +1,33 @@
 <template>
-  <div>
-    <div class="product-image">
-      <img v-bind:src="image" :alt="product">
-    </div>
-    <h1>{{ product }}</h1>
-    <p v-show="inStock">In stock (visibility)</p>
-    <p v-if="inventory > 10">In stock (if expression)</p>
-    <p v-else-if="inventory <= 10 && inventory > 0">Almost sold out</p>
-    <p v-else>Out of stock</p>
+  <div class="app">
+    <div class="nav-bar"></div>
+    <ProductDisplay :premium="premium"/>
+    <ProductDisplay :premium="premium"/>
+    <ProductDisplay :premium="premium"/>
   </div>
-  <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-  <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
 </template>
 
 <script>
-//import HelloWorld from './components/HelloWorld.vue'
+
+import ProductDisplay from './components/ProductDisplay.vue'
 
 export default {
   name: 'App',
   components: {
-    //HelloWorld
+    ProductDisplay,
   },
   data() {
     return {
-      product: 'Socks',
-      image: './assets/logo.png',
-      inStock: true,
-      inventory: 100
+      cart: 0,
+      premium: true
     }
   },
+  methods: {
+    
+  },
+  computed: {
+    
+  }
 }
 </script>
 
@@ -40,5 +39,11 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+body {
+    background-color: #f2f2f2;
+    margin: 0px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #282828;
 }
 </style>
