@@ -1,6 +1,5 @@
 <template>
     <div>
-      <div class="cart">Cart({{ cart }})</div>
       <div class="product-image">
         <img :src="image" :alt="product">
       </div>
@@ -56,10 +55,9 @@
     },
     methods: {
         addToCart() {
-            this.cart += 1
+            this.$emit('add-to-cart', this.variants[this.selectedVariant].id)
         },
-            updateVariant(index) {
-            console.log('INDEX->', index);
+        updateVariant(index) {
             this.selectedVariant = index
         }
     },
