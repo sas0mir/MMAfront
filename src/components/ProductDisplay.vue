@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="pd-container">
       <div class="product-image">
         <img :src="image" :alt="product">
       </div>
@@ -81,6 +81,11 @@
   }
   </script>
   
+  <!-- font-family: 'Roboto', sans-serif;
+font-family: 'Roboto Thin', sans-serif;
+font-family: 'Roboto Light', sans-serif;
+font-family: 'Roboto Medium', sans-serif;
+font-family: 'Roboto Black', sans-serif; -->
   <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -121,6 +126,9 @@ body {
     margin-top: 8px;
     border: 2px solid #d8d8d8;
     border-radius: 50%;
+}
+.pd-container p {
+    font-family: 'Roboto Medium', sans-serif;
 }
 </style>
   

@@ -1,15 +1,11 @@
 <template>
     <main-layout>
-      <p>Welcome home!</p>
+      <p>dashboard page</p>
     </main-layout>
 </template>
   
 <script>
   import MainLayout from '../layouts/MainLayout.vue'
-  import { useSessionStore } from '@/stores/SessionStore';
-
-  const sessionStore = useSessionStore();
-  console.log('HAME-PAGE-STORE->', sessionStore);
   
   export default {
     components: {

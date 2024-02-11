@@ -1,8 +1,8 @@
 export default {
-    '/': 'Home',
-    '/dashboard': 'Dashboard',
-    '/cabinet': 'Cabinet',
-    '/settings': 'Settings',
+    '/': 'HomePage',
+    '/dashboard': 'DashboardPage',
+    '/cabinet': 'CabinetPage',
+    '/settings': 'SettingsPage',
     '/login': 'LoginForm',
     '/register': 'RegisterForm'
 }

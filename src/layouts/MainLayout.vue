@@ -11,6 +11,7 @@
   
 <script>
   import VLink from '../components/VLink.vue'
+  import '../assets/styles.css'
   
   export default {
     components: {
