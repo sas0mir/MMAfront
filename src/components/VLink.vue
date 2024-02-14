@@ -1,5 +1,5 @@
 <template>
-    <a
+    <a class="vlink"
       :href="href"
       @click.prevent="go"
     >
@@ -26,3 +26,13 @@
     }
   }
 </script>
+<style>
+  .vlink {
+    text-decoration: none;
+    font-family: "Roboto Condensed", sans-serif;
+    color: black
+  }
+  .vlink:hover {
+    color: red;
+  }
+</style>

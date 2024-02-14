@@ -1,5 +1,5 @@
 <template>
-    <div class="text-input-container">
+    <div :class="containerClass">
       <label :for="tinp" class="text-input-label">{{ title }}</label>
       <input type="text" id="tinp" v-on:change="handleChange" v-model="value" class="text-input-input"/>
     </div>
@@ -16,6 +16,14 @@
       title: {
         type: String,
         required: true
+      },
+      horizontal: {
+        type: Boolean,
+        required: false
+      },
+      vertical: {
+        type: Boolean,
+        required: false
       }
     },
     data() {
@@ -29,30 +37,44 @@
         }
     },
     computed: {
-        shipping() {
-            if (this.premium) {
-                return 'Free'
+        containerClass() {
+            if (this.vertical) {
+                return `text-input-container vertical`
             }
-            return 2.99
+            return `text-input-container horizontal`
         }
     }
   }
   </script>
   
   <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.text-input-container {
+  min-width: 200px;
+  /* max-width: 30%; */
+  padding: 5px;
+  margin: 10px;
 }
-body {
-    background-color: #f2f2f2;
-    margin: 0px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #282828;
+.horizontal {
+  display: flex;
+  flex-direction: row;
+  justify-content:center;
+}
+.vertical {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.text-input-label {
+  margin-right: 10px;
+  font-family: "Roboto Condensed", sans-serif;
+  color: #282828;
+}
+.text-input-input {
+  width: 50%;
+  font-family: "Roboto Condensed", sans-serif;
+  background-color: inherit;
+  border: none;
+  border-bottom: 1px solid black;
 }
 </style>
   

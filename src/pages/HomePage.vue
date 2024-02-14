@@ -1,6 +1,10 @@
 <template>
     <main-layout>
-      <p>Welcome home!</p>
+      <div class="homepage-container">
+        <p>Welcome home!</p>
+        <p>{{ userName }}</p>
+        <p>{{ userEmail }}</p>
+      </div>
     </main-layout>
 </template>
   
@@ -9,11 +13,25 @@
   import { useSessionStore } from '@/stores/SessionStore';
 
   const sessionStore = useSessionStore();
-  console.log('HAME-PAGE-STORE->', sessionStore);
   
   export default {
     components: {
       MainLayout
+    },
+    computed: {
+      userName() {
+        return sessionStore.getUserData.user.name
+      },
+      userEmail() {
+        return sessionStore.getUserData.user.email
+      }
     }
   }
 </script>
+<style>
+  .homepage-container {
+    position: relative;
+    display: block;
+    margin: 10px;
+  }
+</style>

@@ -19,10 +19,10 @@ export default {
   },
   computed: {
     ViewComponent() {
-        const store = useSessionStore()
+        const sessionStore = useSessionStore()
         const matchingPage = routes[this.currentRoute] || '404notFound'
-        console.log('APP-COMPUTED-STORE->', store);
-        //if(!store.userData?.authorized) return require('./pages/LoginForm.vue').default
+        console.log('APP-COMPUTED-STORE->', sessionStore.userData);
+        if(!sessionStore.userData?.token) return require('./pages/LoginForm.vue').default
         return require(`./pages/${matchingPage}.vue`).default
     }
   },
