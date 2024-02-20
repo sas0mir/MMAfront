@@ -30,26 +30,38 @@
         themes: []
       }
     },
+    async mounted() {
+      console.log('DASHBOARD-MOUNT->', sessionStore.getUserData.themes);
+      const ddResp = await fetch('http://localhost:3000/api/ddata', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: 'test theme'
+        })
+      })
+      const dData = await ddResp.json();
+      console.log('LOAD-DDATA->', dData);
+    },
     computed: {
       userName() {
-        console.log('SESSIONSTOREDD->', sessionStore.getUserData.user)
+        console.log('SESSIONSTOREDD->', sessionStore.getUserData)
         return sessionStore.getUserData
       },
     },
     methods: {
       async handleBtnClick() {
-        const ddResp = await fetch('http://localhost:3000/api/ddata', {
-          method: 'POST',
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-              name: 'test theme'
-          })
-        })
-        const ddData = await ddResp.json()
-        console.log('DDATA->', ddData)
-        if(ddData) {
-          this.themes.push(ddData)
-        }
+        // const ddResp = await fetch('http://localhost:3000/api/ddata', {
+        //   method: 'POST',
+        //   headers: { "Content-Type": "application/json" },
+        //   body: JSON.stringify({
+        //       name: 'test theme'
+        //   })
+        // })
+        // const ddData = await ddResp.json()
+        // console.log('DDATA->', ddData)
+        // if(ddData) {
+        //   this.themes.push(ddData)
+        // }
       }
     }
   }

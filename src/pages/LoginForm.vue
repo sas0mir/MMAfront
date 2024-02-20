@@ -56,11 +56,12 @@ const sessionStore = useSessionStore()
                 })
             })
             const userApiData = await userApiRes.json();
-            console.log('LOGIN->', userApiData, '\nSTARE->', sessionStore);
-            sessionStore.setUserData(userApiData);
+            console.log('LOGIN->', userApiData);
+            sessionStore.setUserData({...userApiData.user, token: userApiData.token});
             //todo очистку значений в полях
             this.formValues.email = '';
             this.formValues.pass = '';
+            //window.location.href = 'http://localhost:8080/'
         }
     },
     computed: {
@@ -71,7 +72,7 @@ const sessionStore = useSessionStore()
   
 <style>
     .login-form {
-        width: 50%;
+        width: 30%;
         display: block;
         margin: auto;
         align-content: center;
@@ -80,10 +81,18 @@ const sessionStore = useSessionStore()
         text-align: center;
     }
     .login-form-title {
-
+        font-family: "Roboto Condensed", sans-serif;
+        font-size: 16pt;
     }
     .login-form-btn {
-
+        background: inherit;
+        font-family: "Roboto Condensed", sans-serif;
+        font-size: 14pt;
+        padding: 1em 2em;
+    }
+    .login-form-btn:hover {
+        border: 2px solid red;
+        color: red;
+        cursor: pointer;
     }
 </style>
-  

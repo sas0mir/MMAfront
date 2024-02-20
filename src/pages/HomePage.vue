@@ -20,10 +20,10 @@
     },
     computed: {
       userName() {
-        return sessionStore.getUserData.user.name
+        return sessionStore.getUserData.name
       },
       userEmail() {
-        return sessionStore.getUserData.user.email
+        return sessionStore.getUserData.email
       }
     }
   }

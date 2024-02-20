@@ -1,8 +1,7 @@
 <template>
     <ul class="main-header-container">
-      <li class="main-header-link"><v-link href="/">Домой</v-link></li>
+      <li class="main-header-link"><v-link href="/">Стартовая страница</v-link></li>
       <li class="main-header-link"><v-link href="/dashboard">Дэшборд</v-link></li>
-      <li class="main-header-link"><v-link href="/cabinet">Личный кабинет</v-link></li>
       <li class="main-header-link"><v-link href="/settings">Настройки</v-link></li>
     </ul>
   
