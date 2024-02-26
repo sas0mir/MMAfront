@@ -13,9 +13,11 @@
 <script>
   import MainLayout from '../layouts/MainLayout.vue'
   import { useSessionStore } from '@/stores/SessionStore';
+  import { useThemesStore } from '@/stores/ThemesStore';
   import VidgetUser from '@/components/VidgetUser.vue';
 
   const sessionStore = useSessionStore()
+  const themesStore = useThemesStore()
   
   export default {
     components: {
@@ -31,34 +33,33 @@
       }
     },
     async mounted() {
-      console.log('DASHBOARD-MOUNT->', sessionStore.getUserData.themes);
-      const ddResp = await fetch('http://localhost:3000/api/ddata', {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            name: 'test theme'
-        })
-      })
-      const dData = await ddResp.json();
-      console.log('LOAD-DDATA->', dData);
+      console.log('DASHBOARD-MOUNT->', sessionStore.getUserData, '\nTHEMES-STORE->', themesStore.getThemes);
+      // const ddResp = await fetch('http://localhost:3000/api/ddata', {
+      //   method: 'POST',
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //       name: 'test theme'
+      //   })
+      // })
+      // const dData = await ddResp.json();
+      // console.log('LOAD-DDATA->', dData);
     },
     computed: {
       userName() {
-        console.log('SESSIONSTOREDD->', sessionStore.getUserData)
         return sessionStore.getUserData
       },
     },
     methods: {
       async handleBtnClick() {
-        // const ddResp = await fetch('http://localhost:3000/api/ddata', {
-        //   method: 'POST',
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify({
-        //       name: 'test theme'
-        //   })
-        // })
-        // const ddData = await ddResp.json()
-        // console.log('DDATA->', ddData)
+        const ddResp = await fetch(`${process.env.BACK_HTTPS_URL}/api/ddata`, {
+          method: 'POST',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+              name: 'test theme'
+          })
+        })
+        const ddData = await ddResp.json()
+        console.log('DDATA->', ddData)
         // if(ddData) {
         //   this.themes.push(ddData)
         // }

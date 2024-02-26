@@ -1,7 +1,7 @@
 <template>
     <div class="vidget-container">
         <h3 class="vidget-title">{{ title }}</h3>
-        <loader-component v-if="themesStore.loader"/>
+        <loader-component :v-if="!vidget_data"/>
       <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem illo totam laboriosam perspiciatis sapiente, eos, harum asperiores optio aliquam omnis reprehenderit blanditiis! Deleniti blanditiis dolores ipsa quos perspiciatis ea! Perferendis?</p>
     </div>
   </template>
@@ -9,9 +9,6 @@
   <script>
 
   import LoaderComponent from './LoaderComponent.vue'
-  import useThemesStore from '../stores/ThemesStore'
-
-  const themesStore = useThemesStore();
 
   export default {
   components: { LoaderComponent },
@@ -24,22 +21,22 @@
       title: {
         type: String,
         required: true
+      },
+      vidget_data: {
+        type: Object,
+        required: false
       }
     },
     data() {
         return {
-            value: '',
-            themes: themesStore.themes
         }
     },
     methods: {
-        handleChange(e) {
-            this.$emit('handle-change', e.target.value)
-        },
         async loadThemes(userId) {
+          console.log(userId)
           //вот этот метод переделай чтобы срабатывал сам как метод жизненного цикла
-          const res = await themesStore.getThemes(userId);
-          if(res.length) this.themes = res
+          //const res = await themesStore.getThemes(userId);
+          //if(res.length) this.themes = res
         }
     },
     computed: {

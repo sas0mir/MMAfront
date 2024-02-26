@@ -1,7 +1,7 @@
 <template>
     <div :class="containerClass">
-      <label for="tinp" class="text-input-label">{{ title }}</label>
-      <input type="text" id="tinp" v-on:change="handleChange" v-model="value" class="text-input-input"/>
+      <p class="text-input-label">{{ title }}</p>
+      <p class="text-input-input">{{ value }}</p>
     </div>
   </template>
   
@@ -9,9 +9,9 @@
   export default {
     name: 'TextInput',
     props: {
-      prev_value: {
+      value: {
         type: String,
-        required: false
+        required: true
       },
       title: {
         type: String,
@@ -28,7 +28,6 @@
     },
     data() {
         return {
-            value: ''
         }
     },
     methods: {
@@ -77,4 +76,3 @@
   border-bottom: 1px solid black;
 }
 </style>
-  

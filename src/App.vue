@@ -21,13 +21,11 @@ export default {
     ViewComponent() {
         const sessionStore = useSessionStore()
         const matchingPage = routes[this.currentRoute] || '404notFound'
-        console.log('APP-COMPUTED-STORE->', sessionStore.userData);
         if(!sessionStore.userData?.token) return require('./pages/LoginForm.vue').default
         return require(`./pages/${matchingPage}.vue`).default
     }
   },
   render() {
-    console.log('APP-RENDER->', this.ViewComponent)
       return h(this.ViewComponent)
   },
   created() {

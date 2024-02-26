@@ -2,17 +2,18 @@ import { defineStore } from "pinia";
 
 export const useThemesStore = defineStore("themesStore", {
     state: () => ({
-        loader: false,
         themes: [],
         selected: {}
     }),
     getters: {
-        getThemes() {
-            return this.themes
+        getThemes: (state) => {
+            console.log('TS-GET-THEMES->', state);
+            return state.themes
         }
     },
     actions: {
         setThemes(data) {
+            console.log('TS-SET-THEMES->', data);
             this.themes = data;
             this.selected = data[0]
         },

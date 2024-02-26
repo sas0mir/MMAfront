@@ -17,12 +17,11 @@
     },
     methods: {
       async handleLogout(e) {
-        console.log('LOGOUT-1->', e);
         const logoutRes = await fetch(`${'http://localhost:3000'}/api/logout`, {
             method: 'GET'
         })
         const logoutData = await logoutRes.json();
-        console.log('LOGIN->', logoutData);
+        console.log('LOGOUT->', e, logoutData);
         sessionStore.setUserData(null);
       }
     }

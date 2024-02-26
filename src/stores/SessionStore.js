@@ -7,7 +7,6 @@ export const useSessionStore = defineStore('sessionStore', {
     },
     actions: {
         setUserData(data) {
-            console.log('ACTION-SET-USER->', data);
             if(data) {
                 this.userData = data
                 this.sessionStarted = new Date()

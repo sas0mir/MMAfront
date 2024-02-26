@@ -17,10 +17,6 @@ const sessionStore = useSessionStore()
   export default {
     name: 'LoginForm',
     props: {
-      value: {
-        type: String,
-        required: true
-      }
     },
     components: {
         TextInput
