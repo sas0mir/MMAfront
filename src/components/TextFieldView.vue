@@ -1,13 +1,13 @@
 <template>
     <div :class="containerClass">
       <p class="text-input-label">{{ title }}</p>
-      <p class="text-input-input">{{ value }}</p>
+      <p class="text-input-text">{{ value }}</p>
     </div>
   </template>
   
   <script>
   export default {
-    name: 'TextInput',
+    name: 'TextFieldView',
     props: {
       value: {
         type: String,
@@ -31,9 +31,6 @@
         }
     },
     methods: {
-        handleChange(e) {
-            this.$emit('handle-change', e.target.value)
-        }
     },
     computed: {
         containerClass() {
@@ -66,13 +63,11 @@
 .text-input-label {
   margin-right: 10px;
   font-family: "Roboto Condensed", sans-serif;
-  color: #282828;
+  color: grey;
 }
-.text-input-input {
+.text-input-text {
   width: 50%;
   font-family: "Roboto Condensed", sans-serif;
   background-color: inherit;
-  border: none;
-  border-bottom: 1px solid black;
 }
 </style>
