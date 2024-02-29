@@ -1,30 +1,31 @@
 <template>
   <main-layout>
-    <div class="homepage-container" :v-if="userInfo.loaded">
+    <div class="homepage-container" v-if="userInfo.loaded">
       <div class="homepage-box-info">
-        <h3>{{ userInfo.user ? userInfo.user.name : '' }}</h3>
-        <!-- <text-field-view title="Организация" :v-if="userInfo.user" :value="userInfo.organization.name" /> -->
+        <h3 v-if="userInfo.user">{{ userInfo.user.name }}</h3>
+        <text-field-view title="Организация" v-if="userInfo.organization" :value="userInfo.organization.name" />
         <text-field-view title="Почта" :value="userEmail" />
-        <text-field-view title="Подписка" :value="userSubscription" />
+        <text-field-view title="Подписка" v-if="userInfo.subscription" :value="userSubscription" />
       </div>
       <div class="homepage-box-info">
         <h3>Ваши темы:</h3>
-        <!-- <p
+        <p
           class="homepage-theme-name"
           v-for="theme in userInfo.user.themes"
-          :key="theme.id"
+          :key="theme"
         >
-            {{ theme.name }}
-        </p> -->
-        <!-- <button
+            {{ theme }}
+        </p>
+        <button
           class="homepage-button"
           :disabled="userInfo.subscription === 1"
           v-on:click="addTheme">
             Добавить тему
-        </button> -->
+        </button>
       </div>
     </div>
     <loader-component v-if="!userInfo.loaded" />
+    <theme-modal title="Добавление темы" v-if="showModal"/>
   </main-layout>
 </template>
   
@@ -32,6 +33,7 @@
   import MainLayout from '../layouts/MainLayout.vue'
   import LoaderComponent from '@/components/LoaderComponent.vue';
   import TextFieldView from '@/components/TextFieldView.vue';
+  import ThemeModal from '@/components/ThemeModal.vue';
   import { useSessionStore } from '@/stores/SessionStore';
 
   const sessionStore = useSessionStore();
@@ -40,29 +42,33 @@
     components: {
       MainLayout,
       LoaderComponent,
-      TextFieldView
+      TextFieldView,
+        ThemeModal
     },
     data() {
         return {
-          userInfo: { loaded: false }
+          userInfo: { loaded: false },
+          showModal: false
         }
+    },
+    watch: {
+      userInfo(newUserInfo, oldUserInfo) {
+        console.log('NEW-UserInfo->', newUserInfo, '\nOLD-UserInfo->', oldUserInfo);
+      }
     },
     methods: {
       addTheme() {
-        console.log('ADD-THEME');
+        this.showModal = true
       },
       async fetchData() {
-        console.log('HOME-FETCH-0->', sessionStore.getUserData.id, sessionStore.getUserData);
         const userApiData = await fetch(`${'http://localhost:3000'}/api/userdata?user_id=${sessionStore.getUserData.id}`, {
         method: 'GET'
         });
         let userApiInfo = await userApiData.json();
-        userApiInfo.loaded = true
-        console.log('HOME-FETCH-1->', userApiInfo);
-        return userApiInfo
+        return { ...userApiInfo.data, loaded: true }
       }
     },
-    async mounted() {
+    async beforeMount() {
       this.userInfo = await this.fetchData();
     },
     computed: {
@@ -87,14 +93,34 @@
 <style>
   .homepage-container {
     position: relative;
-    display: block;
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-start;
     margin: 10px;
   }
   .homepage-box-info {
     position: relative;
     display: block;
-    min-width: 300px;
-    max-width: 30%;
+    min-width: 30%;
+    max-width: 50%;
     padding: 1em;
+    text-align: center;
+  }
+  .homepage-button {
+    margin: 1em;
+    border: 2px solid black;
+    background-color: inherit;
+    font-size: 14pt;
+    font-family: "Roboto Condensed", sans-serif;
+    width: 150px;
+    height: 50px;
+    color: grey;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .homepage-button:hover {
+    border-color: red;
+    color: black;
   }
 </style>
