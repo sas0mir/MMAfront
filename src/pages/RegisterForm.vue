@@ -1,10 +1,11 @@
 <template>
     <form class="login-form" @submit.prevent="onSubmit">
-        <h3 class="login-form-title">Вход в аккаунт</h3>
+        <h3 class="login-form-title">Создание аккаунта</h3>
+        <TextInput title="имя" @handle-change="setName" horizontal/>
         <TextInput title="почта" @handle-change="setEmail" horizontal/>
         <TextInput title="пароль" @handle-change="setPass" horizontal/>
-        <input class="login-form-btn" type="submit" value="Вход"/>
-        <input class="login-form-btn" @click="handleRegisterClick" value="Регистрация"/>
+        <input class="login-form-btn" type="submit" value="Зарегистрироваться"/>
+        <input class="login-form-btn" @click="handleLoginClick" value="Есть аккаунт"/>
     </form>
 </template>
   
@@ -16,7 +17,7 @@ import { useSessionStore } from '@/stores/SessionStore'
 const sessionStore = useSessionStore()
 
   export default {
-    name: 'LoginForm',
+    name: 'RegisterForm',
     props: {
     },
     components: {
@@ -31,6 +32,9 @@ const sessionStore = useSessionStore()
         }
     },
     methods: {
+        setName(value) {
+            this.formValues.name = value
+        },
         setEmail(value) {
             this.formValues.email = value
         },
@@ -43,25 +47,30 @@ const sessionStore = useSessionStore()
                 return
             }
             //this.$emit('login-form-submitted', this.formValues);
-            const userApiRes = await fetch(`${'http://localhost:3000'}/api/login`, {
+            const userApiRes = await fetch(`${'http://localhost:3000'}/api/register`, {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    name: this.formValues.name,
                     email:  this.formValues.email,
                     password: this.formValues.pass,
                     return_to: 'dashboard'
                 })
             })
             const userApiData = await userApiRes.json();
-            console.log('LOGIN->', userApiData);
-            sessionStore.setUserData({...userApiData.user, token: userApiData.token});
-            //todo очистку значений в полях
+            console.log('REGISTER->', userApiData);
+            this.formValues.name = '';
             this.formValues.email = '';
             this.formValues.pass = '';
-            //window.location.href = 'http://localhost:8080/'
+            if(userApiData.success) {
+                sessionStore.setUserData({...userApiData.user, token: userApiData.token});
+                window.Location.href = 'http://localhost:8080/login'
+            } else {
+                alert(userApiData.message)
+            }
         },
-        handleRegisterClick() {
-            window.location.href = 'http://localhost:8080/register'
+        handleLoginClick() {
+            window.location.href = 'http://localhost:8080/login'
         }
     },
     computed: {
@@ -94,7 +103,7 @@ const sessionStore = useSessionStore()
     }
     .login-form-btn:hover {
         border: 2px solid red;
-        color: red;
+        color: grey;
         cursor: pointer;
     }
 </style>

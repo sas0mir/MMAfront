@@ -1,16 +1,31 @@
 <template>
-    <main-layout>
-      <div class="homepage-container">
-        <div class="homepage-box-info">
-          <h3>Пользователь</h3>
-          <text-field-view title="Имя" :value="userName" />
-          <text-field-view title="Почта" :value="userEmail" />
-          <text-field-view title="Подписка" :value="userSubscription" />
-        </div>
+  <main-layout>
+    <div class="homepage-container" :v-if="userInfo.loaded">
+      <div class="homepage-box-info">
+        <h3>{{ userInfo.user ? userInfo.user.name : '' }}</h3>
+        <!-- <text-field-view title="Организация" :v-if="userInfo.user" :value="userInfo.organization.name" /> -->
+        <text-field-view title="Почта" :value="userEmail" />
+        <text-field-view title="Подписка" :value="userSubscription" />
       </div>
-      <div v-if="userInfo.loaded"></div>
-      <loader-component v-if="!userInfo.loaded" />
-    </main-layout>
+      <div class="homepage-box-info">
+        <h3>Ваши темы:</h3>
+        <!-- <p
+          class="homepage-theme-name"
+          v-for="theme in userInfo.user.themes"
+          :key="theme.id"
+        >
+            {{ theme.name }}
+        </p> -->
+        <!-- <button
+          class="homepage-button"
+          :disabled="userInfo.subscription === 1"
+          v-on:click="addTheme">
+            Добавить тему
+        </button> -->
+      </div>
+    </div>
+    <loader-component v-if="!userInfo.loaded" />
+  </main-layout>
 </template>
   
 <script>
@@ -32,15 +47,23 @@
           userInfo: { loaded: false }
         }
     },
-    async mounted() {
-      console.log('HOME-MOUNT');
-      const userApiData = await fetch(`${'http://localhost:3000'}/api/userdata?user_id=${sessionStore.getUserData.id}`, {
+    methods: {
+      addTheme() {
+        console.log('ADD-THEME');
+      },
+      async fetchData() {
+        console.log('HOME-FETCH-0->', sessionStore.getUserData.id, sessionStore.getUserData);
+        const userApiData = await fetch(`${'http://localhost:3000'}/api/userdata?user_id=${sessionStore.getUserData.id}`, {
         method: 'GET'
-      });
-      console.log('HOME-MOUNT-1->', userApiData);
-      this.userInfo = await userApiData.json();
-      console.log('HOME-USERINFO->', this.userInfo);
-      this.userInfo.loaded = true
+        });
+        let userApiInfo = await userApiData.json();
+        userApiInfo.loaded = true
+        console.log('HOME-FETCH-1->', userApiInfo);
+        return userApiInfo
+      }
+    },
+    async mounted() {
+      this.userInfo = await this.fetchData();
     },
     computed: {
       userName() {
@@ -50,7 +73,7 @@
         return sessionStore.getUserData.email
       },
       userSubscription() {
-        switch (sessionStore.getUserData.subscription_type) {
+        switch (this.userInfo.subscription.id) {
           case 1:
             return 'Бесплатная'
           case 2:
