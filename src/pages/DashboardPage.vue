@@ -1,8 +1,9 @@
 <template>
     <main-layout>
+      <h3 class="dashboard-title">{{ selectedTheme }}</h3>
       <div class="dash-container">
-        <vidget-user title="Пользователь"></vidget-user>
-        <vidget-user title="Темы"></vidget-user>
+        <vidget-user title="Упоминания"></vidget-user>
+        <vidget-user title="Источники"></vidget-user>
         <vidget-user title="Графики"></vidget-user>
         <p v-if="themes.length">{{ themes[0] }}</p>
         <button v-on:click="handleBtnClick">Themes query</button>
@@ -12,11 +13,11 @@
   
 <script>
   import MainLayout from '../layouts/MainLayout.vue'
-  import { useSessionStore } from '@/stores/SessionStore';
+  //import { useSessionStore } from '@/stores/SessionStore';
   import { useThemesStore } from '@/stores/ThemesStore';
   import VidgetUser from '@/components/VidgetUser.vue';
 
-  const sessionStore = useSessionStore()
+  //const sessionStore = useSessionStore()
   const themesStore = useThemesStore()
   
   export default {
@@ -33,7 +34,7 @@
       }
     },
     async mounted() {
-      console.log('DASHBOARD-MOUNT->', sessionStore.getUserData, '\nTHEMES-STORE->', themesStore.getThemes);
+      console.log('THEMES-STORE->', themesStore.getSelected, themesStore.$state.selected);
       // const ddResp = await fetch('http://localhost:3000/api/ddata', {
       //   method: 'POST',
       //   headers: { "Content-Type": "application/json" },
@@ -45,8 +46,8 @@
       // console.log('LOAD-DDATA->', dData);
     },
     computed: {
-      userName() {
-        return sessionStore.getUserData
+      selectedTheme() {
+        return `Выбранная тема: ${themesStore.$state.selected}`
       },
     },
     methods: {
@@ -68,6 +69,10 @@
   }
 </script>
 <style>
+  .dashboard-title {
+    font-size: 18pt;
+    margin: 1em;
+  }
   .dash-container {
     position: relative;
     display: flex;

@@ -1,5 +1,5 @@
 <template>
-    <a class="vlink"
+    <a v-bind:class="classNames"
       :href="href"
       @click.prevent="go"
     >
@@ -15,13 +15,22 @@
       href: {
         type:String,
         required: true
+      },
+      customClass: {
+        type: String,
+        required: false
       }
     },
-  
+    computed: {
+      classNames() {
+        return this.customClass ? `vlink ${this.customClass}` : 'vlink'
+      }
+    },
     methods: {
       go () {
         this.$root.currentRoute = this.href
         window.history.pushState(null, routes[this.href], this.href)
+        this.$emit('clicked', true);
       }
     }
   }

@@ -3,7 +3,18 @@
   
       <Transition name="modal-fade">
         <div class="modal-wrapper">
-            <h3>{{ title }}</h3>
+            <div class="modal-container">
+                <button
+                    class="modal-button"
+                    v-on:click="closeModal">
+                        x
+                </button>
+                <h3>{{ title }}</h3>
+                <text-input horizontal="true" title="Наименование темы" />
+                <text-input horizontal="true" title="Источник" />
+                <text-input horizontal="true" title="Автор" />
+                <button class="modal-submit-btn" v-on:click="createTheme">Добавить</button>
+            </div>
         </div>
       </Transition>
   
@@ -11,7 +22,10 @@
 </template>
 
 <script>
+import TextInput from './TextInput.vue';
+
   export default {
+  components: { TextInput },
     name: 'ThemeModal',
     props: {
       title: {
@@ -24,6 +38,12 @@
         }
     },
     methods: {
+        closeModal() {
+            this.$emit('close-modal', true)
+        },
+        createTheme() {
+            //todo
+        }
     },
     computed: {
         
@@ -51,5 +71,24 @@
     }
     .modal-fade-enter-active, .modal-fade-leave-active {
         transition: 0.25s ease all;
+    }
+    .modal-button {
+        position: absolute;
+        top: 5%;
+        right: 5%;
+        width: 5%;
+        border: none;
+        background-color: inherit;
+        cursor: pointer;
+        font-size: 16pt;
+    }
+    .modal-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-content: center;
+        background-color: white;
+        padding: 2em;
     }
 </style>

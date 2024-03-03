@@ -9,13 +9,14 @@
       </div>
       <div class="homepage-box-info">
         <h3>Ваши темы:</h3>
-        <p
+        <div
           class="homepage-theme-name"
           v-for="theme in userInfo.user.themes"
           :key="theme"
         >
-            {{ theme }}
-        </p>
+            <span>{{ theme }}</span>
+            <v-link href="/dashboard" customClass="homepage-goto-btn" @clicked="selectTheme(theme)">&rarr;</v-link>
+      </div>
         <button
           class="homepage-button"
           :disabled="userInfo.subscription === 1"
@@ -25,7 +26,7 @@
       </div>
     </div>
     <loader-component v-if="!userInfo.loaded" />
-    <theme-modal title="Добавление темы" v-if="showModal"/>
+    <theme-modal title="Добавление темы" v-if="showModal" @close-modal="closeModal"/>
   </main-layout>
 </template>
   
@@ -35,15 +36,19 @@
   import TextFieldView from '@/components/TextFieldView.vue';
   import ThemeModal from '@/components/ThemeModal.vue';
   import { useSessionStore } from '@/stores/SessionStore';
+  import { useThemesStore } from '@/stores/ThemesStore';
+  import VLink from '@/components/VLink.vue';
 
   const sessionStore = useSessionStore();
+  const themesStore = useThemesStore();
   
   export default {
     components: {
       MainLayout,
       LoaderComponent,
       TextFieldView,
-        ThemeModal
+      ThemeModal,
+      VLink
     },
     data() {
         return {
@@ -59,6 +64,12 @@
     methods: {
       addTheme() {
         this.showModal = true
+      },
+      closeModal() {
+        this.showModal = false
+      },
+      selectTheme(theme) {
+        themesStore.setSelected(theme)
       },
       async fetchData() {
         const userApiData = await fetch(`${'http://localhost:3000'}/api/userdata?user_id=${sessionStore.getUserData.id}`, {
@@ -122,5 +133,26 @@
   .homepage-button:hover {
     border-color: red;
     color: black;
+  }
+  .homepage-theme-name {
+    margin: auto;
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .homepage-goto-btn {
+    width: 35px;
+    height: 35px;
+    border: none;
+    border-radius: 50%;
+    margin-left: 5%;
+    background-color: inherit;
+    font-size: 16pt;
+    color: black;
+    cursor: pointer;
+  }
+  .homepage-goto-btn:hover {
+    font-size: 20pt;
+    color: red;
   }
 </style>
