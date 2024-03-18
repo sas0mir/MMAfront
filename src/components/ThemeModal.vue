@@ -10,9 +10,11 @@
                         x
                 </button>
                 <h3>{{ title }}</h3>
-                <text-input horizontal="true" title="Наименование темы" />
-                <text-input horizontal="true" title="Источник" />
-                <text-input horizontal="true" title="Автор" />
+                <text-input vertical="true" title="Наименование темы" @handle-change="setThemeName"/>
+                <text-input vertical="true" title="Промпт" @handle-change="setThemePrompt"/>
+                <text-input vertical="true" title="Платформа" @handle-change="setThemePlatform"/>
+                <text-input vertical="true" title="Источник" @handle-change="setThemeSource"/>
+                <text-input vertical="true" title="Автор" @handle-change="setThemeAuthor"/>
                 <button class="modal-submit-btn" v-on:click="createTheme">Добавить</button>
             </div>
         </div>
@@ -23,6 +25,9 @@
 
 <script>
 import TextInput from './TextInput.vue';
+import { useSessionStore } from '@/stores/SessionStore';
+
+const sessionStore = useSessionStore();
 
   export default {
   components: { TextInput },
@@ -35,14 +40,56 @@ import TextInput from './TextInput.vue';
     },
     data() {
         return {
+            themeData: {
+                name: '',
+                prompt: [],
+                platform: '',
+                source: '',
+                author: ''
+            }
         }
     },
     methods: {
         closeModal() {
             this.$emit('close-modal', true)
         },
-        createTheme() {
-            //todo
+        setThemeName(value) {
+            this.themeData.name = value
+        },
+        setThemePrompt(value) {
+            const promptArr = value.split(' ');
+            this.themeData.prompt = promptArr
+        },
+        setThemePlatform(value) {
+            this.themeData.platform = value
+        },
+        setThemeSource(value) {
+            this.themeData.source = value
+        },
+        setThemeAuthor(value) {
+            this.themeData.author = value
+        },
+        async createTheme() {
+            if(!this.themeData.name) {
+                //remake for notifications
+                alert('Ведите название темы')
+                return
+            }
+            this.themeData.user_id = sessionStore.getUserData.id;
+            let userThemes = sessionStore.getUserData.themes;
+            userThemes.push(this.themeData.name);
+            this.themeData.user_themes = userThemes;
+            console.log('CREATE-THEME->', this.themeData);
+            const themeApiData = await fetch(`${'http://localhost:3000'}/api/theme_create`, {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(this.themeData)
+            });
+            let themeApiResponse = await themeApiData.json();
+            console.log('FAIL??', themeApiResponse);
+            if (themeApiResponse.success) {
+                console.log('SUCCESS', themeApiResponse);
+            }
         }
     },
     computed: {
@@ -87,8 +134,28 @@ import TextInput from './TextInput.vue';
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-        align-content: center;
+        align-content: space-between;
         background-color: white;
         padding: 2em;
+    }
+    .modal-container h3 {
+        font-size: 18pt;
+    }
+    .modal-submit-btn {
+        margin: 1em;
+        border: 2px solid black;
+        background-color: inherit;
+        font-size: 14pt;
+        font-family: "Roboto Condensed", sans-serif;
+        width: 150px;
+        height: 50px;
+        color: grey;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+    }
+    .modal-submit-btn:hover {
+        border-color: red;
+        color: black;
     }
 </style>

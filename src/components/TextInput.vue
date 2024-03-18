@@ -67,14 +67,19 @@
 .text-input-label {
   margin-right: 10px;
   font-family: "Roboto Condensed", sans-serif;
-  color: #282828;
+  color: grey;
 }
 .text-input-input {
   width: 50%;
   font-family: "Roboto Condensed", sans-serif;
+  font-size: 14pt;
   background-color: inherit;
   border: none;
   border-bottom: 1px solid black;
+}
+.text-input-input:focus, .text-input-input:focus-visible {
+  outline: none;
+  border-bottom: 2px solid green;
 }
 </style>
   

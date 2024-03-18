@@ -11,18 +11,24 @@
         <h3>Ваши темы:</h3>
         <div
           class="homepage-theme-name"
-          v-for="theme in userInfo.user.themes"
+          v-for="theme in userInfo.themes"
           :key="theme"
         >
-            <span>{{ theme }}</span>
+            <span>{{ `Источник: ${theme.sources.name}, Наименование: ${theme.name}` }}</span>
             <v-link href="/dashboard" customClass="homepage-goto-btn" @clicked="selectTheme(theme)">&rarr;</v-link>
-      </div>
+        </div>
         <button
           class="homepage-button"
           :disabled="userInfo.subscription === 1"
           v-on:click="addTheme">
             Добавить тему
         </button>
+      </div>
+    </div>
+    <div class="homepage-container">
+      <div class="homepage-box-info">
+        <h3>Новости</h3>
+        <p>Тема "Доллар" поднялась в рейтинге на 5 пунктов</p>
       </div>
     </div>
     <loader-component v-if="!userInfo.loaded" />
@@ -76,6 +82,7 @@
         method: 'GET'
         });
         let userApiInfo = await userApiData.json();
+        console.log('USER-API-DATA->', userApiInfo);
         return { ...userApiInfo.data, loaded: true }
       }
     },
@@ -115,7 +122,9 @@
     min-width: 30%;
     max-width: 50%;
     padding: 1em;
+    margin: 1em;
     text-align: center;
+    background-color: rgb(240, 237, 237);
   }
   .homepage-button {
     margin: 1em;
