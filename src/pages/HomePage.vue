@@ -27,12 +27,29 @@
     </div>
     <div class="homepage-container">
       <div class="homepage-box-info">
+        <h3>Ваши подписки:</h3>
+        <div
+          class="homepage-theme-name"
+          v-for="theme in userInfo.themes"
+          :key="theme"
+        >
+            <span>{{ `Канал: ${theme.sources.name} (@${theme.sources.account_name}), Платформа: ${theme.platform.name}` }}</span>
+        </div>
+        <button
+          class="homepage-button"
+          :disabled="userInfo.subscription === 1"
+          v-on:click="addSource">
+            Добавить подписку
+        </button>
+      </div>
+      <div class="homepage-box-info">
         <h3>Новости</h3>
-        <p>Тема "Доллар" поднялась в рейтинге на 5 пунктов</p>
+        <p>Тема "Доллар" поднялась в рейтинге на 5 пунктов (пример)</p>
       </div>
     </div>
     <loader-component v-if="!userInfo.loaded" />
-    <theme-modal title="Добавление темы" v-if="showModal" @close-modal="closeModal"/>
+    <theme-modal title="Добавление темы" v-if="showThemeModal" @close-modal="closeModal"/>
+    <source-modal title="Добавление источника" v-if="showSourceModal" @close-modal="closeModal"/>
   </main-layout>
 </template>
   
@@ -44,6 +61,7 @@
   import { useSessionStore } from '@/stores/SessionStore';
   import { useThemesStore } from '@/stores/ThemesStore';
   import VLink from '@/components/VLink.vue';
+  import SourceModal from '@/components/SourceModal.vue';
 
   const sessionStore = useSessionStore();
   const themesStore = useThemesStore();
@@ -54,12 +72,14 @@
       LoaderComponent,
       TextFieldView,
       ThemeModal,
+      SourceModal,
       VLink
     },
     data() {
         return {
           userInfo: { loaded: false },
-          showModal: false
+          showThemeModal: false,
+          showSourceModal: false
         }
     },
     watch: {
@@ -69,10 +89,14 @@
     },
     methods: {
       addTheme() {
-        this.showModal = true
+        this.showThemeModal = true
+      },
+      addSource() {
+        this.showSourceModal = true
       },
       closeModal() {
-        this.showModal = false
+        this.showThemeModal = false
+        this.showSourceModal = false
       },
       selectTheme(theme) {
         themesStore.setSelected(theme)
@@ -132,7 +156,7 @@
     background-color: inherit;
     font-size: 14pt;
     font-family: "Roboto Condensed", sans-serif;
-    width: 150px;
+    min-width: 150px;
     height: 50px;
     color: grey;
     padding: 10px;
