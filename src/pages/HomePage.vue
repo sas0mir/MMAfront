@@ -49,7 +49,7 @@
     </div>
     <loader-component v-if="!userInfo.loaded" />
     <theme-modal title="Добавление темы" v-if="showThemeModal" @close-modal="closeModal"/>
-    <source-modal title="Добавление источника" v-if="showSourceModal" @close-modal="closeModal"/>
+    <source-modal title="Добавление источника" :platforms="userInfo.platforms" v-if="showSourceModal" @close-modal="closeModal"/>
   </main-layout>
 </template>
   
@@ -143,11 +143,15 @@
   .homepage-box-info {
     position: relative;
     display: block;
-    min-width: 30%;
+    min-width: 45%;
     max-width: 50%;
     padding: 1em;
     margin: 1em;
     text-align: center;
+    /* background-color: rgb(240, 237, 237); */
+  }
+  .homepage-box-info h3 {
+    padding: 1em 0;
     background-color: rgb(240, 237, 237);
   }
   .homepage-button {

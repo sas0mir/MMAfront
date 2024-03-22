@@ -10,9 +10,9 @@
                         x
                 </button>
                 <h3>{{ title }}</h3>
-                <text-input vertical="true" title="Платформа" @handle-change="setPlatform"/>
-                <text-input vertical="true" title="Источник" @handle-change="setSource"/>
-                <text-input vertical="true" title="Автор" @handle-change="setAuthor"/>
+                <select-input vertical title="Платформа" :options="platforms" @handle-change="setPlatform"/>
+                <text-input vertical="true" title="Наименование источника" @handle-change="setSource"/>
+                <text-input vertical="true" title="Автор (опционально)" @handle-change="setAuthor"/>
                 <button class="modal-submit-btn" v-on:click="createSource">Добавить</button>
             </div>
         </div>
@@ -23,16 +23,21 @@
 
 <script>
 import TextInput from './TextInput.vue';
+import SelectInput from './SelectInput.vue';
 import { useSessionStore } from '@/stores/SessionStore';
 
 const sessionStore = useSessionStore();
 
   export default {
-  components: { TextInput },
+  components: { TextInput, SelectInput },
     name: 'SourceModal',
     props: {
       title: {
         type: String,
+        required: true
+      },
+      platforms: {
+        type: Array,
         required: true
       }
     },
