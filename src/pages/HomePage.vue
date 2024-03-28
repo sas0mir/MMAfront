@@ -45,11 +45,21 @@
       <div class="homepage-box-info">
         <h3>Новости</h3>
         <p>Тема "Доллар" поднялась в рейтинге на 5 пунктов (пример)</p>
+        <p>В выдаче scrapper есть количество просмотров views у сообщения + чтобы провести поиск по каналу надо к аккауннейму добавить ?q="искомое"</p>
       </div>
+    </div>
+    <div class="homepage-container">
+      <div class="homepage-box-info">
+        <h3>Последние сообщения с подписок:</h3>
+        <div></div>
+        <loader-component v-if="!latestMessages.loaded" />
+      </div>
+      <div class="homepage-box-info"></div>
     </div>
     <loader-component v-if="!userInfo.loaded" />
     <theme-modal title="Добавление темы" v-if="showThemeModal" @close-modal="closeModal"/>
     <source-modal title="Добавление источника" :platforms="userInfo.platforms" v-if="showSourceModal" @close-modal="closeModal"/>
+    <notification-component v-for="notify in activeNotify" :key="notify.notifyTitle" :show="showNotification" :title="notify.notifyTitle" :message="notify.notifyMessage"/>
   </main-layout>
 </template>
   
@@ -60,11 +70,25 @@
   import ThemeModal from '@/components/ThemeModal.vue';
   import { useSessionStore } from '@/stores/SessionStore';
   import { useThemesStore } from '@/stores/ThemesStore';
+  import { useNotificationsStore } from '@/stores/NotificationStore';
   import VLink from '@/components/VLink.vue';
   import SourceModal from '@/components/SourceModal.vue';
+  import NotificationComponent from '@/components/NotificationComponent.vue';
+  //import { reactive } from 'vue';
 
   const sessionStore = useSessionStore();
   const themesStore = useThemesStore();
+  const notificationsStore = useNotificationsStore();
+
+  //const activeNotify = reactive(notificationsStore.getActiveNotifications);
+
+  // watchEffect(() => {
+  //   const notifications = [...activeNotify];
+  //   console.log('WE->', notifications);
+  //   if(notifications.length) {
+  //     showNotification = true
+  //   }
+  // })
   
   export default {
     components: {
@@ -73,18 +97,36 @@
       TextFieldView,
       ThemeModal,
       SourceModal,
-      VLink
+      VLink,
+      NotificationComponent
     },
     data() {
         return {
           userInfo: { loaded: false },
+          latestMessages: { loaded: false},
           showThemeModal: false,
-          showSourceModal: false
+          showSourceModal: false,
+          showNotification: false,
         }
     },
+    watchEffect() {
+      const notifications = [...this.activeNotify];
+      console.log('V-O->', notifications);
+      if(notifications.length) {
+        this.showNotification = true
+      }
+    },
     watch: {
-      userInfo(newUserInfo, oldUserInfo) {
-        console.log('NEW-UserInfo->', newUserInfo, '\nOLD-UserInfo->', oldUserInfo);
+      showNotification(newValue, oldValue) {
+        if(newValue && newValue !== oldValue) {
+          setTimeout(() => this.showNotification = false, 2000)
+        }
+      },
+      activeNotify(newValue, oldValue) {
+        console.log('NOTIFICATIONS->', newValue, oldValue);
+        if(newValue && newValue !== oldValue) {
+          this.showNotification = true
+        }
       }
     },
     methods: {
@@ -107,11 +149,22 @@
         });
         let userApiInfo = await userApiData.json();
         console.log('USER-API-DATA->', userApiInfo);
+        notificationsStore.setNotifications([{notifyTitle: userApiInfo.success, notifyMessage: userApiInfo.message}]);
         return { ...userApiInfo.data, loaded: true }
+      },
+      async loadRss() {
+        const rssApiData = await fetch(`${'http://localhost:3000'}/api/load_posts?user_id=${sessionStore.getUserData.id}`, {
+          method: 'GET'
+        })
+        let rssApiInfo = await rssApiData.json();
+        console.log('RSS-API-DATA->', rssApiInfo);
+        notificationsStore.setNotifications([{notifyTitle: rssApiInfo.success, notifyMessage: rssApiInfo.message}]);
+        return { ...rssApiInfo.data, loaded: true }
       }
     },
     async beforeMount() {
       this.userInfo = await this.fetchData();
+      this.latestMessages = await this.loadRss();
     },
     computed: {
       userName() {
@@ -119,6 +172,10 @@
       },
       userEmail() {
         return sessionStore.getUserData.email
+      },
+      activeNotify() {
+        console.log('GET-NOT-STORE->', notificationsStore.getActiveNotifications);
+        return notificationsStore.getActiveNotifications
       },
       userSubscription() {
         switch (this.userInfo.subscription.id) {

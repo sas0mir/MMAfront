@@ -25,8 +25,10 @@
 import TextInput from './TextInput.vue';
 import SelectInput from './SelectInput.vue';
 import { useSessionStore } from '@/stores/SessionStore';
+import { useNotificationsStore } from '@/stores/NotificationStore';
 
 const sessionStore = useSessionStore();
+const notificationsStore = useNotificationsStore();
 
   export default {
   components: { TextInput, SelectInput },
@@ -81,6 +83,7 @@ const sessionStore = useSessionStore();
                 console.log('SUCCESS', sourceApiResponse);
                 this.closeModal();
             }
+            notificationsStore.setNotifications([{notifyTitle: sourceApiResponse.success, notifyMessage: sourceApiResponse.message}])
         }
     },
     computed: {

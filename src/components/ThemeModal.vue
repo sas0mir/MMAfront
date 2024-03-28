@@ -26,8 +26,10 @@
 <script>
 import TextInput from './TextInput.vue';
 import { useSessionStore } from '@/stores/SessionStore';
+import { useNotificationsStore } from '@/stores/NotificationStore';
 
 const sessionStore = useSessionStore();
+const notificationsStore = useNotificationsStore();
 
   export default {
   components: { TextInput },
@@ -90,6 +92,7 @@ const sessionStore = useSessionStore();
             if (themeApiResponse.success) {
                 console.log('SUCCESS', themeApiResponse);
             }
+            notificationsStore.setNotifications([{notifyTitle: themeApiResponse.success, notifyMessage: themeApiResponse.message}])
         }
     },
     computed: {
