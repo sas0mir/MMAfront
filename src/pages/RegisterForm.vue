@@ -2,6 +2,7 @@
     <form class="login-form" @submit.prevent="onSubmit">
         <h3 class="login-form-title">Создание аккаунта</h3>
         <TextInput title="имя" @handle-change="setName" horizontal/>
+        <TextInput title="организация" @handle-change="setOrg" horizontal/>
         <TextInput title="почта" @handle-change="setEmail" horizontal/>
         <TextInput title="пароль" @handle-change="setPass" horizontal/>
         <input class="login-form-btn" type="submit" value="Зарегистрироваться"/>
@@ -26,14 +27,19 @@ const sessionStore = useSessionStore()
     data() {
         return {
             formValues: {
+                name: '',
                 email: '',
-                pass: ''
+                pass: '',
+                org: ''
             }
         }
     },
     methods: {
         setName(value) {
             this.formValues.name = value
+        },
+        setOrg(value) {
+            this.formValues.org = value
         },
         setEmail(value) {
             this.formValues.email = value
@@ -54,14 +60,15 @@ const sessionStore = useSessionStore()
                     name: this.formValues.name,
                     email:  this.formValues.email,
                     password: this.formValues.pass,
+                    organization: this.formValues.org,
                     return_to: 'dashboard'
                 })
             })
             const userApiData = await userApiRes.json();
             console.log('REGISTER->', userApiData);
-            this.formValues.name = '';
-            this.formValues.email = '';
-            this.formValues.pass = '';
+            //this.formValues.name = '';
+            //this.formValues.email = '';
+            //this.formValues.pass = '';
             if(userApiData.success) {
                 sessionStore.setUserData({...userApiData.user, token: userApiData.token});
                 window.Location.href = 'http://localhost:8080/login'

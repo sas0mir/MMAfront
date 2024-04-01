@@ -6,29 +6,51 @@
         <input class="login-form-btn" type="submit" value="Вход"/>
         <input class="login-form-btn" @click="handleRegisterClick" value="Регистрация"/>
     </form>
+    <notification-component :show="showNotification" :title="activeNotify.notifyTitle" :message="activeNotify.notifyMessage"/>
 </template>
   
 <script>
 
 import TextInput from '../components/TextInput.vue'
+import NotificationComponent from '@/components/NotificationComponent.vue'
 import { useSessionStore } from '@/stores/SessionStore'
+import { useNotificationsStore } from '@/stores/NotificationStore'
 
 const sessionStore = useSessionStore()
+const notificationsStore = useNotificationsStore()
 
   export default {
     name: 'LoginForm',
     props: {
     },
     components: {
-        TextInput
+        TextInput,
+        NotificationComponent
     },
     data() {
         return {
             formValues: {
                 email: '',
                 pass: ''
-            }
+            },
+            showNotification: false,
+            activeNotify: { loaded: false }
         }
+    },
+    watch: {
+      showNotification(newValue, oldValue) {
+        if(newValue && newValue !== oldValue) {
+          setTimeout(() => {
+            this.showNotification = false
+            notificationsStore.clearActive()
+          }, 2000)
+        }
+      },
+      activeNotify(newValue, oldValue) {
+        if(newValue && newValue !== oldValue && !newValue.notifyTitle) {
+          this.showNotification = true
+        }
+      }
     },
     methods: {
         setEmail(value) {
@@ -53,16 +75,22 @@ const sessionStore = useSessionStore()
                 })
             })
             const userApiData = await userApiRes.json();
-            console.log('LOGIN->', userApiData);
+            notificationsStore.setNotifications([{notifyTitle: userApiData.success, notifyMessage: userApiData.message}])
             sessionStore.setUserData({...userApiData.user, token: userApiData.token});
-            //todo очистку значений в полях
-            this.formValues.email = '';
-            this.formValues.pass = '';
-            //window.location.href = 'http://localhost:8080/'
+            // this.formValues.email = '';
+            // this.formValues.pass = '';
         },
         handleRegisterClick() {
             window.location.href = 'http://localhost:8080/register'
         }
+    },
+    beforeMount() {
+      notificationsStore.$subscribe((mutation, state) => {
+        if (state.active && !state.active.notifyTitle) {
+          this.activeNotify = state.active
+          this.showNotification = true
+        }
+      })
     },
     computed: {
         

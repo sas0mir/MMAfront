@@ -11,7 +11,7 @@
                 </button>
                 <h3>{{ title }}</h3>
                 <select-input vertical title="Платформа" :options="platforms" @handle-change="setPlatform"/>
-                <text-input vertical="true" title="Наименование источника" @handle-change="setSource"/>
+                <text-input vertical="true" title="Аккаунт источника (после@)" @handle-change="setSource"/>
                 <text-input vertical="true" title="Автор (опционально)" @handle-change="setAuthor"/>
                 <button class="modal-submit-btn" v-on:click="createSource">Добавить</button>
             </div>

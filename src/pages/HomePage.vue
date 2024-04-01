@@ -30,10 +30,10 @@
         <h3>Ваши подписки:</h3>
         <div
           class="homepage-theme-name"
-          v-for="theme in userInfo.themes"
-          :key="theme"
+          v-for="source of userInfo.sources"
+          :key="source.id"
         >
-            <span>{{ `Канал: ${theme.sources.name} (@${theme.sources.account_name}), Платформа: ${theme.platform.name}` }}</span>
+            <span>{{ `Канал: ${source.name} (@${source.account_name}), Платформа: ${userInfo.platforms[source.platform - 1].name}` }}</span>
         </div>
         <button
           class="homepage-button"
@@ -50,16 +50,16 @@
     </div>
     <div class="homepage-container">
       <div class="homepage-box-info">
-        <h3>Последние сообщения с подписок:</h3>
+        <h3>Лента ваших каналов:</h3>
         <div></div>
         <loader-component v-if="!latestMessages.loaded" />
       </div>
       <div class="homepage-box-info"></div>
     </div>
     <loader-component v-if="!userInfo.loaded" />
-    <theme-modal title="Добавление темы" v-if="showThemeModal" @close-modal="closeModal"/>
+    <theme-modal title="Добавление темы" :platforms="userInfo.platforms" :sources="userInfo.sources" v-if="showThemeModal" @close-modal="closeModal"/>
     <source-modal title="Добавление источника" :platforms="userInfo.platforms" v-if="showSourceModal" @close-modal="closeModal"/>
-    <notification-component v-for="notify in activeNotify" :key="notify.notifyTitle" :show="showNotification" :title="notify.notifyTitle" :message="notify.notifyMessage"/>
+    <notification-component :show="showNotification" :title="activeNotify.notifyTitle" :message="activeNotify.notifyMessage"/>
   </main-layout>
 </template>
   
@@ -75,20 +75,11 @@
   import SourceModal from '@/components/SourceModal.vue';
   import NotificationComponent from '@/components/NotificationComponent.vue';
   //import { reactive } from 'vue';
+  //import { mapState } from 'pinia';
 
   const sessionStore = useSessionStore();
   const themesStore = useThemesStore();
   const notificationsStore = useNotificationsStore();
-
-  //const activeNotify = reactive(notificationsStore.getActiveNotifications);
-
-  // watchEffect(() => {
-  //   const notifications = [...activeNotify];
-  //   console.log('WE->', notifications);
-  //   if(notifications.length) {
-  //     showNotification = true
-  //   }
-  // })
   
   export default {
     components: {
@@ -107,23 +98,19 @@
           showThemeModal: false,
           showSourceModal: false,
           showNotification: false,
+          activeNotify: { loaded: false }
         }
-    },
-    watchEffect() {
-      const notifications = [...this.activeNotify];
-      console.log('V-O->', notifications);
-      if(notifications.length) {
-        this.showNotification = true
-      }
     },
     watch: {
       showNotification(newValue, oldValue) {
         if(newValue && newValue !== oldValue) {
-          setTimeout(() => this.showNotification = false, 2000)
+          setTimeout(() => {
+            this.showNotification = false
+            notificationsStore.clearActive()
+          }, 2000)
         }
       },
       activeNotify(newValue, oldValue) {
-        console.log('NOTIFICATIONS->', newValue, oldValue);
         if(newValue && newValue !== oldValue) {
           this.showNotification = true
         }
@@ -131,14 +118,17 @@
     },
     methods: {
       addTheme() {
+        //notificationsStore.setNotifications([{notifyTitle: true, notifyMessage: 'modal opened'}])
         this.showThemeModal = true
       },
       addSource() {
         this.showSourceModal = true
       },
-      closeModal() {
+      async closeModal() {
         this.showThemeModal = false
         this.showSourceModal = false
+        this.userInfo = await this.fetchData();
+        this.latestMessages = await this.loadRss();
       },
       selectTheme(theme) {
         themesStore.setSelected(theme)
@@ -165,6 +155,13 @@
     async beforeMount() {
       this.userInfo = await this.fetchData();
       this.latestMessages = await this.loadRss();
+      notificationsStore.$subscribe((mutation, state) => {
+        //console.log('SUBSCRIBE->', mutation, state);
+        if (state.active) {
+          this.activeNotify = state.active
+          this.showNotification = true
+        }
+      })
     },
     computed: {
       userName() {
@@ -172,10 +169,6 @@
       },
       userEmail() {
         return sessionStore.getUserData.email
-      },
-      activeNotify() {
-        console.log('GET-NOT-STORE->', notificationsStore.getActiveNotifications);
-        return notificationsStore.getActiveNotifications
       },
       userSubscription() {
         switch (this.userInfo.subscription.id) {
@@ -185,7 +178,7 @@
             return 'Платная'
           default: return 'Премиум'
         }
-      }
+      },
     }
   }
 </script>

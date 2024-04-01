@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 export const useNotificationsStore = defineStore("notificationsStore", {
     state: () => ({
         notifications: [],
-        active: []
+        active: null
     }),
     getters: {
         getNotifications: (state) => {
@@ -15,16 +15,16 @@ export const useNotificationsStore = defineStore("notificationsStore", {
         setNotifications(data) {
             if(!this.notifications.length) {
                 this.notifications = data;
-                this.active.push(data[0]);
+                this.active = data[0];
             } else {
                 for (let notify of data) {
                     this.notifications.push(notify)
-                    this.active.push(notify)
+                    this.active = notify
                 }
             }
         },
         clearActive() {
-            this.active = []
+            this.active = null
         }
     }
 })

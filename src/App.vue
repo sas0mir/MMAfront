@@ -22,8 +22,12 @@ export default {
         const sessionStore = useSessionStore()
         const matchingPage = routes[this.currentRoute] || '404notFound'
         const isOnRegistration = /register/g.test(window.location.href);
-        if(!sessionStore.userData?.token) return isOnRegistration ? require('./pages/RegisterForm.vue').default : require('./pages/LoginForm.vue').default
-        return require(`./pages/${matchingPage === 'RegisterForm' ? 'HomePage' : matchingPage}.vue`).default
+        const isOnLoginOrReg = ['RegisterForm', 'LoginForm'].indexOf(matchingPage) >= 0;
+        console.log('000->', !!sessionStore.userData?.token, matchingPage, isOnRegistration);
+        if(!sessionStore.userData?.token) {
+          return isOnRegistration ? require('./pages/RegisterForm.vue').default : require('./pages/LoginForm.vue').default
+        }
+        return require(`./pages/${isOnLoginOrReg ? 'HomePage' : matchingPage}.vue`).default
     }
   },
   render() {
