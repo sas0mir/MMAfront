@@ -14,7 +14,7 @@
           v-for="theme in userInfo.themes"
           :key="theme"
         >
-            <span>{{ `Источник: ${theme.sources.name}, Наименование: ${theme.name}` }}</span>
+            <span>{{ `Источник: ${getSourceNameByTheme(theme)}, Наименование: ${theme.name}` }}</span>
             <v-link href="/dashboard" customClass="homepage-goto-btn" @clicked="selectTheme(theme)">&rarr;</v-link>
         </div>
         <button
@@ -51,7 +51,12 @@
     <div class="homepage-container">
       <div class="homepage-box-info">
         <h3>Лента ваших каналов:</h3>
-        <div></div>
+        <div class="homepage-rss">
+          <div v-for="message of latestMessages" :key="message.message_url" class="homepage-rss-message">
+          <span>{{ 'Канал: ' + message.user_name }}</span><span>{{ 'Просмотры: ' + message.views }}</span>
+          <p>{{ message.message_text }}</p>
+        </div>
+        </div>
         <loader-component v-if="!latestMessages.loaded" />
       </div>
       <div class="homepage-box-info"></div>
@@ -133,6 +138,15 @@
       selectTheme(theme) {
         themesStore.setSelected(theme)
       },
+      getSourceNameByTheme(theme) {
+        if (!theme || !this.userInfo.sources) return ''
+        let sourceNames = '';
+        const themeSources = this.userInfo.sources.filter(s => theme.sources.indexOf(s.id) >= 0);
+        for (const source of themeSources) {
+          sourceNames += ` ${source.name}`
+        }
+        return sourceNames
+      },
       async fetchData() {
         const userApiData = await fetch(`${'http://localhost:3000'}/api/userdata?user_id=${sessionStore.getUserData.id}`, {
         method: 'GET'
@@ -147,7 +161,8 @@
           method: 'GET'
         })
         let rssApiInfo = await rssApiData.json();
-        console.log('RSS-API-DATA->', rssApiInfo);
+        //const rss = await rssApiInfo.data.json();
+        console.log('RSS-API-DATA->', rssApiInfo, typeof rssApiInfo.data);
         notificationsStore.setNotifications([{notifyTitle: rssApiInfo.success, notifyMessage: rssApiInfo.message}]);
         return { ...rssApiInfo.data, loaded: true }
       }
@@ -241,5 +256,16 @@
   .homepage-goto-btn:hover {
     font-size: 20pt;
     color: red;
+  }
+  .homepage-rss {
+    position: relative;
+    display: block;
+    padding: 1em;
+    max-height: 30vh;
+    overflow: auto;
+  }
+  .homepage-rss-message span {
+    font-size: 14pt;
+    margin-right: 1em;
   }
 </style>
