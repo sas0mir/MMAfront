@@ -44,5 +44,8 @@ export default {
 <style>
 #app {
   font-family: "Roboto Condensed", sans-serif;
+  height: 100vh;
+  background: rgb(57,57,57);
+  background: linear-gradient(350deg, rgba(57,57,57,1) 0%, rgba(157,157,157,0.7833508403361344) 30%, rgba(237,237,237,0.520045518207283) 100%);
 }
 </style>

@@ -47,13 +47,15 @@
 .text-input-container {
   min-width: 200px;
   /* max-width: 30%; */
-  padding: 5px;
-  margin: 10px;
+  padding: 0 1em;
+  margin: 1em;
+  background-color: #ededed;
+  border-radius: 1vw;
 }
 .horizontal {
   display: flex;
   flex-direction: row;
-  justify-content:center;
+  justify-content:space-between;
 }
 .vertical {
   display: flex;

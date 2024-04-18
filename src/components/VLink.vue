@@ -23,7 +23,8 @@
     },
     computed: {
       classNames() {
-        return this.customClass ? `vlink ${this.customClass}` : 'vlink'
+        const classByUrl = window.location.pathname === this.href ? 'vlink vlink-active' : 'vlink';
+        return this.customClass ? `${classByUrl} ${this.customClass}` : classByUrl
       }
     },
     methods: {
@@ -40,6 +41,9 @@
     text-decoration: none;
     font-family: "Roboto Condensed", sans-serif;
     color: black
+  }
+  .vlink-active {
+    text-decoration: underline;
   }
   .vlink:hover {
     color: red;

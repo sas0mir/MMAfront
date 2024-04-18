@@ -3,19 +3,21 @@
     <div class="homepage-container" v-if="userInfo.loaded">
       <div class="homepage-box-info">
         <h3 v-if="userInfo.user">{{ userInfo.user.name }}</h3>
-        <text-field-view title="Организация" v-if="userInfo.organization" :value="userInfo.organization.name" />
-        <text-field-view title="Почта" :value="userEmail" />
-        <text-field-view title="Подписка" v-if="userInfo.subscription" :value="userSubscription" />
+        <text-field-view title="Организация" v-if="userInfo.organization" horizontal :value="userInfo.organization.name" />
+        <text-field-view title="Почта" :value="userEmail" horizontal />
+        <text-field-view title="Подписка" v-if="userInfo.subscription" :value="userSubscription" horizontal />
       </div>
       <div class="homepage-box-info">
         <h3>Ваши темы:</h3>
-        <div
-          class="homepage-theme-name"
-          v-for="theme in userInfo.themes"
-          :key="theme"
-        >
-            <span>{{ `Источник: ${getSourceNameByTheme(theme)}, Наименование: ${theme.name}` }}</span>
-            <v-link href="/dashboard" customClass="homepage-goto-btn" @clicked="selectTheme(theme)">&rarr;</v-link>
+        <div class="homepage-theme-container">
+          <div
+            class="homepage-theme-name"
+            v-for="theme in userInfo.themes"
+            :key="theme"
+          >
+              <span>{{ `Источник: ${getSourceNameByTheme(theme)}, Наименование: ${theme.name}` }}</span>
+              <v-link href="/dashboard" customClass="homepage-goto-btn" @clicked="selectTheme(theme)">&rarr;</v-link>
+          </div>
         </div>
         <button
           class="homepage-button"
@@ -24,8 +26,6 @@
             Добавить тему
         </button>
       </div>
-    </div>
-    <div class="homepage-container">
       <div class="homepage-box-info">
         <h3>Ваши подписки:</h3>
         <div
@@ -45,10 +45,9 @@
       <div class="homepage-box-info">
         <h3>Новости</h3>
         <p>Тема "Доллар" поднялась в рейтинге на 5 пунктов (пример)</p>
+        <p>TO DO</p>
         <p>В выдаче scrapper есть количество просмотров views у сообщения + чтобы провести поиск по каналу надо к аккауннейму добавить ?q="искомое"</p>
       </div>
-    </div>
-    <div class="homepage-container">
       <div class="homepage-box-info">
         <h3>Лента ваших каналов:</h3>
         <div class="homepage-rss">
@@ -59,7 +58,6 @@
         </div>
         <loader-component v-if="!latestMessages.loaded" />
       </div>
-      <div class="homepage-box-info"></div>
     </div>
     <loader-component v-if="!userInfo.loaded" />
     <theme-modal title="Добавление темы" :platforms="userInfo.platforms" :sources="userInfo.sources" v-if="showThemeModal" @close-modal="closeModal"/>
@@ -122,8 +120,13 @@
       }
     },
     methods: {
-      addTheme() {
-        //notificationsStore.setNotifications([{notifyTitle: true, notifyMessage: 'modal opened'}])
+      async addTheme() {
+        const userApiRes = await fetch(`${'http://localhost:3000'}/api/telegram`, {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" }
+            })
+            const userApiData = await userApiRes.json();
+            console.log('TELEGRAM->', userApiData);
         this.showThemeModal = true
       },
       addSource() {
@@ -202,22 +205,27 @@
     position: relative;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content:flex-start;
     margin: 10px;
   }
   .homepage-box-info {
     position: relative;
     display: block;
-    min-width: 45%;
+    /* min-width: 45%; */
     max-width: 50%;
     padding: 1em;
     margin: 1em;
     text-align: center;
-    /* background-color: rgb(240, 237, 237); */
+    background-color: rgb(187, 186, 186);
+    /* background: linear-gradient(180deg, rgba(57,57,57,0.7049194677871149) 0%, rgba(157,157,157,0.5760679271708684) 30%, rgba(237,237,237,0.2959558823529411) 100%); */
+    border-radius: 1vw;
   }
   .homepage-box-info h3 {
-    padding: 1em 0;
-    background-color: rgb(240, 237, 237);
+    font-size: 18pt;
+    padding-bottom: 1em;
+    margin: 0;
+    /* background-color: rgb(240, 237, 237); */
   }
   .homepage-button {
     margin: 1em;
@@ -231,16 +239,25 @@
     padding: 10px;
     text-align: center;
     cursor: pointer;
+    border-radius: 1vw;
   }
   .homepage-button:hover {
     border-color: red;
     color: black;
   }
+  .homepage-theme-container {
+    display: block;
+    width: 100%;
+    max-height: 30vh;
+    overflow: auto;
+  }
   .homepage-theme-name {
-    margin: auto;
-    width: 50%;
     display: flex;
     justify-content: space-between;
+    background-color: #ededed;
+    border-radius: 1vw;
+    padding: 1em;
+    margin-bottom: 1em;
   }
   .homepage-goto-btn {
     width: 35px;
@@ -263,6 +280,9 @@
     padding: 1em;
     max-height: 30vh;
     overflow: auto;
+  }
+  .homepage-rss-message {
+    width: 70%;
   }
   .homepage-rss-message span {
     font-size: 14pt;

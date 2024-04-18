@@ -100,6 +100,7 @@ const notificationsStore = useNotificationsStore();
             console.log('FAIL??', themeApiResponse);
             if (themeApiResponse.success) {
                 console.log('SUCCESS', themeApiResponse);
+                this.closeModal()
             }
             notificationsStore.setNotifications([{notifyTitle: themeApiResponse.success, notifyMessage: themeApiResponse.message}])
         }
