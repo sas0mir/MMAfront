@@ -65,7 +65,7 @@ const notificationsStore = useNotificationsStore()
                 return
             }
             //this.$emit('login-form-submitted', this.formValues);
-            const userApiRes = await fetch(`${'http://localhost:3000'}/api/login`, {
+            const userApiRes = await fetch(`${process.env.VUE_APP_BACK_URL}/api/login`, {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -81,6 +81,7 @@ const notificationsStore = useNotificationsStore()
             // this.formValues.pass = '';
         },
         handleRegisterClick() {
+          //to do change localhost
             window.location.href = 'http://localhost:8080/register'
         }
     },

@@ -23,7 +23,6 @@ export default {
         const matchingPage = routes[this.currentRoute] || '404notFound'
         const isOnRegistration = /register/g.test(window.location.href);
         const isOnLoginOrReg = ['RegisterForm', 'LoginForm'].indexOf(matchingPage) >= 0;
-        console.log('000->', !!sessionStore.userData?.token, matchingPage, isOnRegistration);
         if(!sessionStore.userData?.token) {
           return isOnRegistration ? require('./pages/RegisterForm.vue').default : require('./pages/LoginForm.vue').default
         }
@@ -31,10 +30,12 @@ export default {
     }
   },
   render() {
+      console.log('RENDER->', h, this.ViewComponent);
       return h(this.ViewComponent)
   },
   created() {
       window.addEventListener('popstate', () => {
+          console.log('POPSTATE->', this.currentRoute, window.location.pathname);
           this.currentRoute = window.location.pathname
       })
   }

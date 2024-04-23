@@ -52,7 +52,7 @@
     },
     methods: {
       async handleBtnClick() {
-        const ddResp = await fetch(`${process.env.BACK_HTTPS_URL}/api/ddata`, {
+        const ddResp = await fetch(`${process.env.VUE_APP_BACK_URL}/api/ddata`, {
           method: 'POST',
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

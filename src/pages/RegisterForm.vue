@@ -53,7 +53,7 @@ const sessionStore = useSessionStore()
                 return
             }
             //this.$emit('login-form-submitted', this.formValues);
-            const userApiRes = await fetch(`${'http://localhost:3000'}/api/register`, {
+            const userApiRes = await fetch(`${process.env.VUE_APP_BACK_URL}/api/register`, {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

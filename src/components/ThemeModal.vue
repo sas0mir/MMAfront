@@ -91,7 +91,7 @@ const notificationsStore = useNotificationsStore();
             userThemes.push(this.themeData.name);
             this.themeData.user_themes = userThemes;
             console.log('CREATE-THEME->', this.themeData);
-            const themeApiData = await fetch(`${'http://localhost:3000'}/api/theme_create`, {
+            const themeApiData = await fetch(`${process.env.VUE_APP_BACK_URL}/api/theme_create`, {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(this.themeData)

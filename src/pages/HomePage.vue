@@ -28,12 +28,14 @@
       </div>
       <div class="homepage-box-info">
         <h3>Ваши подписки:</h3>
-        <div
-          class="homepage-theme-name"
-          v-for="source of userInfo.sources"
-          :key="source.id"
-        >
-            <span>{{ `Канал: ${source.name} (@${source.account_name}), Платформа: ${userInfo.platforms[source.platform - 1].name}` }}</span>
+        <div class="homepage-theme-container">
+          <div
+            class="homepage-theme-name"
+            v-for="source of userInfo.sources"
+            :key="source.id"
+          >
+              <span>{{ `Канал: ${source.name} (@${source.account_name}), Платформа: ${userInfo.platforms[source.platform - 1].name}` }}</span>
+          </div>
         </div>
         <button
           class="homepage-button"
@@ -44,9 +46,11 @@
       </div>
       <div class="homepage-box-info">
         <h3>Новости</h3>
-        <p>Тема "Доллар" поднялась в рейтинге на 5 пунктов (пример)</p>
-        <p>TO DO</p>
-        <p>В выдаче scrapper есть количество просмотров views у сообщения + чтобы провести поиск по каналу надо к аккауннейму добавить ?q="искомое"</p>
+        <div class="homepage-theme-container">
+          <p>Тема "Доллар" поднялась в рейтинге на 5 пунктов (пример)</p>
+          <p>TO DO</p>
+          <p>В выдаче scrapper есть количество просмотров views у сообщения + чтобы провести поиск по каналу надо к аккауннейму добавить ?q="искомое"</p>
+        </div>
       </div>
       <div class="homepage-box-info">
         <h3>Лента ваших каналов:</h3>
@@ -121,7 +125,7 @@
     },
     methods: {
       async addTheme() {
-        const userApiRes = await fetch(`${'http://localhost:3000'}/api/telegram`, {
+        const userApiRes = await fetch(`${process.env.VUE_APP_BACK_URL}/api/telegram`, {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" }
             })
@@ -151,7 +155,7 @@
         return sourceNames
       },
       async fetchData() {
-        const userApiData = await fetch(`${'http://localhost:3000'}/api/userdata?user_id=${sessionStore.getUserData.id}`, {
+        const userApiData = await fetch(`${process.env.VUE_APP_BACK_URL}/api/userdata?user_id=${sessionStore.getUserData.id}`, {
         method: 'GET'
         });
         let userApiInfo = await userApiData.json();
@@ -160,7 +164,7 @@
         return { ...userApiInfo.data, loaded: true }
       },
       async loadRss() {
-        const rssApiData = await fetch(`${'http://localhost:3000'}/api/load_posts?user_id=${sessionStore.getUserData.id}`, {
+        const rssApiData = await fetch(`${process.env.VUE_APP_BACK_URL}/api/load_posts?user_id=${sessionStore.getUserData.id}`, {
           method: 'GET'
         })
         let rssApiInfo = await rssApiData.json();

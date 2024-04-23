@@ -17,7 +17,7 @@
     },
     methods: {
       async handleLogout(e) {
-        const logoutRes = await fetch(`${'http://localhost:3000'}/api/logout`, {
+        const logoutRes = await fetch(`${process.env.VUE_APP_BACK_URL}/api/logout`, {
             method: 'GET'
         })
         const logoutData = await logoutRes.json();

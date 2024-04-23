@@ -71,7 +71,7 @@ const notificationsStore = useNotificationsStore();
                 notificationsStore.setNotifications([{notifyTitle: 'Обязательные поля', notifyMessage: 'Заполните наименование источника'}]);
                 return
             }
-            const checkedSource = await fetch(`${'http://localhost:3000'}/api/telegram-search`, {
+            const checkedSource = await fetch(`${process.env.VUE_APP_BACK_URL}/api/telegram-search`, {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -88,7 +88,7 @@ const notificationsStore = useNotificationsStore();
                 return
             }
             this.sourceData.user_id = sessionStore.getUserData.id;
-            const sourceApiData = await fetch(`${'http://localhost:3000'}/api/subscribe`, {
+            const sourceApiData = await fetch(`${process.env.VUE_APP_BACK_URL}/api/subscribe`, {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(this.sourceData)
