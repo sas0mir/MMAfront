@@ -77,7 +77,7 @@ const sessionStore = useSessionStore()
             }
         },
         handleLoginClick() {
-            window.location.href = 'http://localhost:8080/login'
+            window.location.href = `${window.location.host}/login`
         }
     },
     computed: {

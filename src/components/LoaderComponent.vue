@@ -18,8 +18,9 @@
         display: inline-block;
         position: absolute;
         left: 8px;
-        width: 16px;
-        background: #cef;
+        width: 15px;
+        border-radius: 10px;
+        background: rgb(255, 255, 255);
         animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
     }
     .lds-facebook div:nth-child(1) {

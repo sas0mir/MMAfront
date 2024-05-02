@@ -2,12 +2,14 @@
   <main-layout>
     <div class="homepage-container" v-if="userInfo.loaded">
       <div class="homepage-box-info">
+        <v-icon name="fa-user" class="home-box-icon"/>
         <h3 v-if="userInfo.user">{{ userInfo.user.name }}</h3>
         <text-field-view title="Организация" v-if="userInfo.organization" horizontal :value="userInfo.organization.name" />
         <text-field-view title="Почта" :value="userEmail" horizontal />
         <text-field-view title="Подписка" v-if="userInfo.subscription" :value="userSubscription" horizontal />
       </div>
       <div class="homepage-box-info">
+        <v-icon name="fa-bolt" class="home-box-icon"/>
         <h3>Ваши темы:</h3>
         <div class="homepage-theme-container">
           <div
@@ -15,8 +17,10 @@
             v-for="theme in userInfo.themes"
             :key="theme"
           >
-              <span>{{ `Источник: ${getSourceNameByTheme(theme)}, Наименование: ${theme.name}` }}</span>
-              <v-link href="/dashboard" customClass="homepage-goto-btn" @clicked="selectTheme(theme)">&rarr;</v-link>
+              <span>{{ theme.name }}</span>
+              <v-link href="/dashboard" customClass="homepage-goto-btn" @clicked="selectTheme(theme)">
+                <v-icon name="fa-arrow-circle-right" hover animation="pulse" speed="fast" scale="1.5" />
+              </v-link>
           </div>
         </div>
         <button
@@ -27,6 +31,7 @@
         </button>
       </div>
       <div class="homepage-box-info">
+        <v-icon name="fa-bell" class="home-box-icon"/>
         <h3>Ваши подписки:</h3>
         <div class="homepage-theme-container">
           <div
@@ -45,6 +50,7 @@
         </button>
       </div>
       <div class="homepage-box-info">
+        <v-icon name="fa-globe-asia" class="home-box-icon"/>
         <h3>Новости</h3>
         <div class="homepage-theme-container">
           <p>Тема "Доллар" поднялась в рейтинге на 5 пунктов (пример)</p>
@@ -53,6 +59,7 @@
         </div>
       </div>
       <div class="homepage-box-info">
+        <v-icon name="fa-book-open" class="home-box-icon"/>
         <h3>Лента ваших каналов:</h3>
         <div class="homepage-rss">
           <div v-for="message of latestMessages" :key="message.message_url" class="homepage-rss-message">
@@ -159,8 +166,8 @@
         method: 'GET'
         });
         let userApiInfo = await userApiData.json();
-        console.log('USER-API-DATA->', userApiInfo);
         notificationsStore.setNotifications([{notifyTitle: userApiInfo.success, notifyMessage: userApiInfo.message}]);
+        console.log('HOME-USERDATA->', userApiInfo.data);
         return { ...userApiInfo.data, loaded: true }
       },
       async loadRss() {
@@ -212,6 +219,8 @@
     flex-wrap: wrap;
     justify-content:flex-start;
     margin: 10px;
+    overflow: auto;
+    max-height: 100%;
   }
   .homepage-box-info {
     position: relative;
@@ -224,11 +233,20 @@
     background-color: rgb(187, 186, 186);
     /* background: linear-gradient(180deg, rgba(57,57,57,0.7049194677871149) 0%, rgba(157,157,157,0.5760679271708684) 30%, rgba(237,237,237,0.2959558823529411) 100%); */
     border-radius: 1vw;
+    min-height: 20%;
+    max-height: 35%;
+  }
+  .home-box-icon {
+    position: absolute;
+    top: 1em;
+    left: 1em;
   }
   .homepage-box-info h3 {
-    font-size: 18pt;
+    font-size: 15pt;
     padding-bottom: 1em;
     margin: 0;
+    margin-left: 2em;
+    text-align: left;
     /* background-color: rgb(240, 237, 237); */
   }
   .homepage-button {
@@ -246,7 +264,7 @@
     border-radius: 1vw;
   }
   .homepage-button:hover {
-    border-color: red;
+    border-color: rgb(65, 112, 200);
     color: black;
   }
   .homepage-theme-container {
@@ -262,21 +280,16 @@
     border-radius: 1vw;
     padding: 1em;
     margin-bottom: 1em;
+    align-items: center;
   }
   .homepage-goto-btn {
-    width: 35px;
-    height: 35px;
     border: none;
-    border-radius: 50%;
-    margin-left: 5%;
     background-color: inherit;
-    font-size: 16pt;
     color: black;
     cursor: pointer;
   }
   .homepage-goto-btn:hover {
-    font-size: 20pt;
-    color: red;
+    color: rgb(65, 112, 200);
   }
   .homepage-rss {
     position: relative;

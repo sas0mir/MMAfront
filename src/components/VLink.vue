@@ -46,6 +46,6 @@
     text-decoration: underline;
   }
   .vlink:hover {
-    color: red;
+    color: rgb(65, 112, 200);
   }
 </style>

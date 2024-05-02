@@ -44,6 +44,7 @@ export default {
 
 <style>
 #app {
+  background-attachment: fixed;
   font-family: "Roboto Condensed", sans-serif;
   height: 100vh;
   background: rgb(57,57,57);

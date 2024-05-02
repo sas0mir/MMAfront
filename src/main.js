@@ -2,5 +2,34 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import "./assets/styles.css"
+import { OhVueIcon, addIcons } from 'oh-vue-icons'
+import {
+    FaInstagram,
+    FaVk,
+    FaYandex,
+    FaTelegramPlane,
+    FaUser,
+    FaBolt,
+    FaBell,
+    FaGlobeAsia,
+    FaBookOpen,
+    FaArrowCircleRight
+} from 'oh-vue-icons/icons'
 
-createApp(App).use(createPinia()).mount('#app')
+addIcons(
+    FaInstagram,
+    FaVk,
+    FaYandex,
+    FaTelegramPlane,
+    FaUser,
+    FaBolt,
+    FaBell,
+    FaGlobeAsia,
+    FaBookOpen,
+    FaArrowCircleRight
+);
+
+const app = createApp(App);
+app.use(createPinia());
+app.component("v-icon", OhVueIcon);
+app.mount('#app');

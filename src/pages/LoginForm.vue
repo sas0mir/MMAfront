@@ -81,8 +81,7 @@ const notificationsStore = useNotificationsStore()
             // this.formValues.pass = '';
         },
         handleRegisterClick() {
-          //to do change localhost
-            window.location.href = 'http://localhost:8080/register'
+            window.location.href = `${window.location.host}/register`
         }
     },
     beforeMount() {
