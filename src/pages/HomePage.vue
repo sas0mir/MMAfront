@@ -69,6 +69,26 @@
         </div>
         <loader-component v-if="!latestMessages.loaded" />
       </div>
+      <div class="homepage-box-info">
+        <v-icon name="fa-cloud" class="home-box-icon"/>
+        <h3>Облако ваших тегов:</h3>
+        <vue-word-cloud
+          style="
+            height: 400px;
+            width: 400px;
+          "
+          :words="wordCloud"
+          :color="([, weight]) => weight > 10 ? 'rgb(65, 112, 200)' : weight > 5 ? 'grey' : 'white'"
+          font-family="Roboto"
+          animation-duration="1000"
+          animation-easing="ease"
+          animation-overlap="0"
+          spacing="2"
+          rotation="0"
+          rotation-unit="deg"
+        />
+        <loader-component v-if="!latestMessages.loaded" />
+      </div>
     </div>
     <loader-component v-if="!userInfo.loaded" />
     <theme-modal title="Добавление темы" :platforms="userInfo.platforms" :sources="userInfo.sources" v-if="showThemeModal" @close-modal="closeModal"/>
@@ -88,6 +108,7 @@
   import VLink from '@/components/VLink.vue';
   import SourceModal from '@/components/SourceModal.vue';
   import NotificationComponent from '@/components/NotificationComponent.vue';
+  import VueWordCloud from 'vuewordcloud';
   //import { reactive } from 'vue';
   //import { mapState } from 'pinia';
 
@@ -103,7 +124,8 @@
       ThemeModal,
       SourceModal,
       VLink,
-      NotificationComponent
+      NotificationComponent,
+      [VueWordCloud.name]: VueWordCloud
     },
     data() {
         return {
@@ -208,6 +230,19 @@
           default: return 'Премиум'
         }
       },
+      wordCloud() {
+        let cloud = [];
+        if(this.userInfo.themes) {
+          for (let theme of this.userInfo.themes) {
+            for (let prompt of theme.prompt) {
+              //cloud.push([prompt, theme.rating])
+              cloud.push([prompt, Math.floor(Math.random() * 15)])
+            }
+          }
+        }
+        console.log('WORDS-CLOUD->', cloud);
+        return cloud
+      }
     }
   }
 </script>

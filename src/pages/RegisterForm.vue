@@ -52,6 +52,7 @@ const sessionStore = useSessionStore()
                 alert('Введите данные')
                 return
             }
+            console.log('REGISTER-1->', process.env.VUE_APP_BACK_URL, this.formValues);
             //this.$emit('login-form-submitted', this.formValues);
             const userApiRes = await fetch(`${process.env.VUE_APP_BACK_URL}/api/register`, {
                 method: 'POST',

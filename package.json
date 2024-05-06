@@ -18,7 +18,8 @@
     "oh-vue-icons": "^1.0.0-rc3",
     "pinia": "^2.1.7",
     "vue": "^3.2.13",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vuewordcloud": "^19.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

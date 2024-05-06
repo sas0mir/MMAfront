@@ -23,6 +23,7 @@ export default {
         const matchingPage = routes[this.currentRoute] || '404notFound'
         const isOnRegistration = /register/g.test(window.location.href);
         const isOnLoginOrReg = ['RegisterForm', 'LoginForm'].indexOf(matchingPage) >= 0;
+        console.log('0000->', isOnLoginOrReg, isOnRegistration, !sessionStore.userData?.token, matchingPage, this.currentRoute);
         if(!sessionStore.userData?.token) {
           return isOnRegistration ? require('./pages/RegisterForm.vue').default : require('./pages/LoginForm.vue').default
         }

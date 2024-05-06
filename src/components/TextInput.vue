@@ -39,16 +39,16 @@
     computed: {
         containerClass() {
             if (this.vertical) {
-                return `text-input-container vertical`
+                return `text-input-container-modal vertical`
             }
-            return `text-input-container horizontal`
+            return `text-input-container-modal horizontal`
         }
     }
   }
   </script>
   
   <style>
-.text-input-container {
+.text-input-container-modal {
   min-width: 200px;
   /* max-width: 30%; */
   padding: 5px;
@@ -70,7 +70,7 @@
   color: grey;
 }
 .text-input-input {
-  width: 50%;
+  /* width: 50%; */
   font-family: "Roboto Condensed", sans-serif;
   font-size: 14pt;
   background-color: inherit;

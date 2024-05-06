@@ -4,7 +4,7 @@
         <TextInput title="почта" @handle-change="setEmail" horizontal/>
         <TextInput title="пароль" @handle-change="setPass" horizontal/>
         <input class="login-form-btn" type="submit" value="Вход"/>
-        <input class="login-form-btn" @click="handleRegisterClick" value="Регистрация"/>
+        <input class="login-form-btn" type="button" @click="handleRegisterClick" value="Регистрация"/>
     </form>
     <notification-component :show="showNotification" :title="activeNotify.notifyTitle" :message="activeNotify.notifyMessage"/>
 </template>
@@ -81,6 +81,7 @@ const notificationsStore = useNotificationsStore()
             // this.formValues.pass = '';
         },
         handleRegisterClick() {
+            console.log('REGISTER->', window.location.host);
             window.location.href = `${window.location.host}/register`
         }
     },

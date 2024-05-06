@@ -12,20 +12,15 @@
                 <h3>{{ title }}</h3>
                 <text-input vertical="true" title="Наименование темы" @handle-change="setThemeName"/>
                 <text-input vertical="true" title="Промпт" @handle-change="setThemePrompt"/>
-                <select-input vertical title="Платформа" :options="platforms" @handle-change="setPlatform"/>
-                <select-input vertical title="Источник" :options="sources" @handle-change="setThemeSource"/>
-                <text-input vertical="true" title="Автор" @handle-change="setThemeAuthor"/>
                 <button class="modal-submit-btn" v-on:click="createTheme">Добавить</button>
             </div>
         </div>
       </Transition>
-  
     </Teleport>
 </template>
 
 <script>
 import TextInput from './TextInput.vue';
-import SelectInput from './SelectInput.vue';
 import { useSessionStore } from '@/stores/SessionStore';
 import { useNotificationsStore } from '@/stores/NotificationStore';
 
@@ -33,7 +28,9 @@ const sessionStore = useSessionStore();
 const notificationsStore = useNotificationsStore();
 
   export default {
-  components: { TextInput, SelectInput },
+    components: { 
+        TextInput
+    },
     name: 'ThemeModal',
     props: {
       title: {
@@ -53,10 +50,7 @@ const notificationsStore = useNotificationsStore();
         return {
             themeData: {
                 name: '',
-                prompt: [],
-                platform: '',
-                source: '',
-                author: ''
+                prompt: []
             }
         }
     },
@@ -68,8 +62,13 @@ const notificationsStore = useNotificationsStore();
             this.themeData.name = value
         },
         setThemePrompt(value) {
-            const promptArr = value.split(' ');
-            this.themeData.prompt = promptArr
+            if(/,/g.test(value)) {
+                const promptArr = value.split(',');
+                this.themeData.prompt = promptArr
+            } else {
+                const promptArr = value.split(' ');
+                this.themeData.prompt = promptArr
+            }
         },
         setThemePlatform(value) {
             this.themeData.platform = value
@@ -82,24 +81,22 @@ const notificationsStore = useNotificationsStore();
         },
         async createTheme() {
             if(!this.themeData.name) {
-                //remake for notifications
-                alert('Ведите название темы')
+                notificationsStore.setNotifications([{notifyTitle: 'Ошибка', notifyMessage: 'Обязательное поле Наименование темы не заполнено'}]);
                 return
             }
             this.themeData.user_id = sessionStore.getUserData.id;
             let userThemes = sessionStore.getUserData.themes;
             userThemes.push(this.themeData.name);
             this.themeData.user_themes = userThemes;
-            console.log('CREATE-THEME->', this.themeData);
+            console.log('CREATE-THEME-START->', this.themeData);
             const themeApiData = await fetch(`${process.env.VUE_APP_BACK_URL}/api/theme_create`, {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(this.themeData)
             });
             let themeApiResponse = await themeApiData.json();
-            console.log('FAIL??', themeApiResponse);
+            console.log('CREATE-THEME-RESPONSE->', themeApiResponse);
             if (themeApiResponse.success) {
-                console.log('SUCCESS', themeApiResponse);
                 this.closeModal()
             }
             notificationsStore.setNotifications([{notifyTitle: themeApiResponse.success, notifyMessage: themeApiResponse.message}])
@@ -142,6 +139,9 @@ const notificationsStore = useNotificationsStore();
         cursor: pointer;
         font-size: 16pt;
     }
+    .modal-button:hover {
+        color: red;
+    }
     .modal-container {
         position: relative;
         display: flex;
@@ -150,6 +150,7 @@ const notificationsStore = useNotificationsStore();
         align-content: space-between;
         background-color: white;
         padding: 2em;
+        border-radius: 1vw;
     }
     .modal-container h3 {
         font-size: 18pt;
@@ -160,15 +161,16 @@ const notificationsStore = useNotificationsStore();
         background-color: inherit;
         font-size: 14pt;
         font-family: "Roboto Condensed", sans-serif;
-        width: 150px;
+        min-width: 150px;
         height: 50px;
         color: grey;
         padding: 10px;
         text-align: center;
         cursor: pointer;
+        border-radius: 1vw;
     }
     .modal-submit-btn:hover {
-        border-color: red;
+        border-color: rgb(65, 112, 200);
         color: black;
     }
 </style>

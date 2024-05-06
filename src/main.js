@@ -13,7 +13,8 @@ import {
     FaBell,
     FaGlobeAsia,
     FaBookOpen,
-    FaArrowCircleRight
+    FaArrowCircleRight,
+    FaCloud
 } from 'oh-vue-icons/icons'
 
 addIcons(
@@ -26,7 +27,8 @@ addIcons(
     FaBell,
     FaGlobeAsia,
     FaBookOpen,
-    FaArrowCircleRight
+    FaArrowCircleRight,
+    FaCloud
 );
 
 const app = createApp(App);
