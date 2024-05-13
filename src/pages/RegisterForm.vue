@@ -6,7 +6,8 @@
         <TextInput title="почта" @handle-change="setEmail" horizontal/>
         <TextInput title="пароль" @handle-change="setPass" horizontal/>
         <input class="login-form-btn" type="submit" value="Зарегистрироваться"/>
-        <input class="login-form-btn" @click="handleLoginClick" value="Есть аккаунт"/>
+        <v-link href="/login">Есть аккаунт</v-link>
+        <!-- <input class="login-form-btn" @click="handleLoginClick" value="Есть аккаунт"/> -->
     </form>
 </template>
   
@@ -14,6 +15,7 @@
 
 import TextInput from '../components/TextInput.vue'
 import { useSessionStore } from '@/stores/SessionStore'
+import VLink from '@/components/VLink.vue'
 
 const sessionStore = useSessionStore()
 
@@ -22,7 +24,8 @@ const sessionStore = useSessionStore()
     props: {
     },
     components: {
-        TextInput
+        TextInput,
+        VLink
     },
     data() {
         return {

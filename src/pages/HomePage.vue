@@ -61,11 +61,20 @@
       <div class="homepage-box-info">
         <v-icon name="fa-book-open" class="home-box-icon"/>
         <h3>Лента ваших каналов:</h3>
-        <div class="homepage-rss">
-          <div v-for="message of latestMessages" :key="message.message_url" class="homepage-rss-message">
-          <span>{{ 'Канал: ' + message.user_name }}</span><span>{{ 'Просмотры: ' + message.views }}</span>
-          <p>{{ message.message_text }}</p>
-        </div>
+        <div class="homepage-rss-container">
+          <div class="homepage-rss-left">
+            <div v-for="channel in latestMessages" :key="channel.length" class="homepage-rss-channel">
+              <button class="homepage-rss-btn" v-if="channel.length" v-on:click="selectRssChannel(channel)"><img :src="channel[0]?.user_photo" :alt="channel[0]?.user_name" />{{ channel[0]?.user_name }}</button>
+            </div>
+          </div>
+          <div class="homepage-rss-right">
+            <div class="homepage-rss-post" v-for="post of activeRssChannel" :key="post.views">
+              <p class="homepage-rss-post-title">{{`${post.datetime} Просмотры:${post.views}`}}</p>
+              <img class="homepage-rss-post-img" v-if="post.message_photo.length" :src="post.message_photo[0]" :alt="post.data_post" />
+              <video class="homepage-rss-post-video" v-if="post.message_video.length" :src="post.message_video[0]" controls>{{ post.data_post }}</video>
+              <p class="homepage-rss-post-text">{{post.message_text}}</p>
+            </div>
+          </div>
         </div>
         <loader-component v-if="!latestMessages.loaded" />
       </div>
@@ -134,7 +143,8 @@
           showThemeModal: false,
           showSourceModal: false,
           showNotification: false,
-          activeNotify: { loaded: false }
+          activeNotify: { loaded: false },
+          activeRssChannel: []
         }
     },
     watch: {
@@ -170,6 +180,7 @@
         this.showSourceModal = false
         this.userInfo = await this.fetchData();
         this.latestMessages = await this.loadRss();
+        this.activeRssChannel = Object.values(this.latestMessages)[0]
       },
       selectTheme(theme) {
         themesStore.setSelected(theme)
@@ -198,14 +209,18 @@
         })
         let rssApiInfo = await rssApiData.json();
         //const rss = await rssApiInfo.data.json();
-        console.log('RSS-API-DATA->', rssApiInfo, typeof rssApiInfo.data);
+        console.log('RSS-API-DATA->', rssApiInfo);
         notificationsStore.setNotifications([{notifyTitle: rssApiInfo.success, notifyMessage: rssApiInfo.message}]);
         return { ...rssApiInfo.data, loaded: true }
+      },
+      selectRssChannel(channel) {
+        this.activeRssChannel = channel
       }
     },
     async beforeMount() {
       this.userInfo = await this.fetchData();
       this.latestMessages = await this.loadRss();
+      this.activeRssChannel = Object.values(this.latestMessages)[0]
       notificationsStore.$subscribe((mutation, state) => {
         //console.log('SUBSCRIBE->', mutation, state);
         if (state.active) {
@@ -333,11 +348,57 @@
     max-height: 30vh;
     overflow: auto;
   }
-  .homepage-rss-message {
-    width: 70%;
+  .homepage-rss-container {
+    position: relative;
+    display: grid;
+    grid-template-columns: 20% 75%;
+    grid-column-gap: 5%;
   }
-  .homepage-rss-message span {
-    font-size: 14pt;
+  .homepage-rss-left, .homepage-rss-right {
+    position: relative;
+    display: block;
+    max-height: 40vh;
+    overflow: auto;
+  }
+  .homepage-rss-channel {
+    display: flex;
+    background-color: #ededed;
+    border-radius: 1vw;
+    padding: 0;
+    margin-bottom: 1em;
+    align-items: center;
+  }
+  .homepage-rss-btn {
+    width: 100%;
+    padding: 0;
+    border-radius: 1vw;
+    font-size: 12pt;
+    font-family: "Roboto Condensed", sans-serif;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+  }
+  .homepage-rss-btn img {
+    width: 1vw;
+    border-radius: 50%;
     margin-right: 1em;
+  }
+  .homepage-rss-right {
+    border-radius: 1vw;
+  }
+  .homepage-rss-post {
+    display: block;
+    margin-bottom: 1em;
+    padding: 1em;
+    background-color: #ededed;
+    border-radius: 1vw;
+  }
+  .homepage-rss-post-title {
+    text-align: right;
+  }
+  .homepage-rss-post-video {
+    width: 80%;
   }
 </style>

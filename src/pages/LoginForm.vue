@@ -4,7 +4,8 @@
         <TextInput title="почта" @handle-change="setEmail" horizontal/>
         <TextInput title="пароль" @handle-change="setPass" horizontal/>
         <input class="login-form-btn" type="submit" value="Вход"/>
-        <input class="login-form-btn" type="button" @click="handleRegisterClick" value="Регистрация"/>
+        <v-link href="/register">Регистрация</v-link>
+        <!-- <input class="login-form-btn" type="button" @click="handleRegisterClick" value="Регистрация"/> -->
     </form>
     <notification-component :show="showNotification" :title="activeNotify.notifyTitle" :message="activeNotify.notifyMessage"/>
 </template>
@@ -13,6 +14,7 @@
 
 import TextInput from '../components/TextInput.vue'
 import NotificationComponent from '@/components/NotificationComponent.vue'
+import VLink from '@/components/VLink.vue'
 import { useSessionStore } from '@/stores/SessionStore'
 import { useNotificationsStore } from '@/stores/NotificationStore'
 
@@ -25,7 +27,8 @@ const notificationsStore = useNotificationsStore()
     },
     components: {
         TextInput,
-        NotificationComponent
+        NotificationComponent,
+        VLink
     },
     data() {
         return {
