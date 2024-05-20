@@ -4,10 +4,10 @@
       <select id="tinp" v-on:change="handleChange" :name="title" v-model="value" class="select-input">
         <div v-if="group_by">
             <optgroup v-for="gopt in options" :key="gopt" :label="gopt">
-            <option v-for="opt in gopt" :key="opt.id" :value="opt.id">{{ opt.name }}</option>
+            <option v-for="opt in gopt" :key="opt.id" :value="opt.id">{{ opt.name || opt.title }}</option>
         </optgroup>
         </div>
-        <option v-else v-for="opt in options" :key="opt.id" :value="opt.id">{{ opt.name }}</option>
+        <option v-else v-for="opt in options" :key="opt.id" :value="opt.id">{{ opt.name || opt.title }}</option>
         </select>
     </div>
   </template>
@@ -86,7 +86,7 @@
   color: grey;
 }
 .select-input {
-  width: 50%;
+  /* width: 50%; */
   font-family: "Roboto Condensed", sans-serif;
   font-size: 14pt;
   background-color: inherit;

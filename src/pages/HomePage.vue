@@ -72,7 +72,7 @@
               <p class="homepage-rss-post-title">{{`${post.datetime} Просмотры:${post.views}`}}</p>
               <img class="homepage-rss-post-img" v-if="post.message_photo.length" :src="post.message_photo[0]" :alt="post.data_post" />
               <video class="homepage-rss-post-video" v-if="post.message_video.length" :src="post.message_video[0]" controls>{{ post.data_post }}</video>
-              <p class="homepage-rss-post-text">{{post.message_text}}</p>
+              <p class="homepage-rss-post-text">{{post.message_text || post.message_url}}</p>
             </div>
           </div>
         </div>
@@ -164,12 +164,6 @@
     },
     methods: {
       async addTheme() {
-        const userApiRes = await fetch(`${process.env.VUE_APP_BACK_URL}/api/telegram`, {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" }
-            })
-            const userApiData = await userApiRes.json();
-            console.log('TELEGRAM->', userApiData);
         this.showThemeModal = true
       },
       addSource() {
@@ -276,7 +270,7 @@
     position: relative;
     display: block;
     /* min-width: 45%; */
-    max-width: 50%;
+    max-width: 35%;
     padding: 1em;
     margin: 1em;
     text-align: center;
@@ -397,6 +391,9 @@
   }
   .homepage-rss-post-title {
     text-align: right;
+  }
+  .homepage-rss-post-img {
+    max-width: 80%;
   }
   .homepage-rss-post-video {
     width: 80%;

@@ -11,8 +11,9 @@
                 </button>
                 <h3>{{ title }}</h3>
                 <select-input vertical title="Платформа" :options="platforms" @handle-change="setPlatform"/>
-                <text-input vertical="true" title="Аккаунт источника (после@)" @handle-change="setSource"/>
+                <text-input vertical="true" title="Название источника" @handle-change="setSource"/>
                 <button class="modal-submit-btn" v-on:click="checkSource">Проверить название</button>
+                <select-input v-if="foundChannels.length" vertical title="Найденные каналы" :options="foundChannels" @handle-change="setSourceFinal"/>
                 <text-input vertical="true" title="Автор (опционально)" @handle-change="setAuthor"/>
                 <button class="modal-submit-btn" v-on:click="createSource">Добавить</button>
             </div>
@@ -50,7 +51,8 @@ const notificationsStore = useNotificationsStore();
                 platform: '',
                 source: '',
                 author: ''
-            }
+            },
+            foundChannels: []
         }
     },
     methods: {
@@ -66,12 +68,15 @@ const notificationsStore = useNotificationsStore();
         setAuthor(value) {
             this.sourceData.author = value
         },
+        setSourceFinal(value) {
+            this.sourceData.source = this.foundChannels.filter(ch => ch.id === value).title
+        },
         async checkSource() {
             if(!this.sourceData.source) {
                 notificationsStore.setNotifications([{notifyTitle: 'Обязательные поля', notifyMessage: 'Заполните наименование источника'}]);
                 return
             }
-            const checkedSource = await fetch(`${process.env.VUE_APP_BACK_URL}/api/telegram-search`, {
+            const checkedSource = await fetch(`${process.env.VUE_APP_BACK_URL}/api/telegram-contacts-search`, {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -80,7 +85,14 @@ const notificationsStore = useNotificationsStore();
                 })
             })
             const checked = await checkedSource.json();
+            notificationsStore.setNotifications([{notifyTitle: 'Поиск каналов', notifyMessage: checked.message}]);
             console.log('CHECKED->', checked);
+            if (checked.success && checked.data.contacts?.chats?.length) {
+                this.foundChannels = checked.data.contacts.chats;
+            } else {
+                notificationsStore.setNotifications([{notifyTitle: 'Поиск каналов', notifyMessage: `Каналов ${this.sourceData.source} не найдено`}]);
+                this.foundChannels = [];
+            }
         },
         async createSource() {
             if(!this.sourceData.source) {
@@ -95,6 +107,7 @@ const notificationsStore = useNotificationsStore();
             });
             let sourceApiResponse = await sourceApiData.json();
             console.log('FAIL??', sourceApiResponse);
+            this.foundChannels = [];
             if (sourceApiResponse.success) {
                 console.log('SUCCESS', sourceApiResponse);
                 this.closeModal();
@@ -145,6 +158,7 @@ const notificationsStore = useNotificationsStore();
         flex-direction: column;
         justify-content: space-around;
         align-content: space-between;
+        min-width: 20%;
         background-color: white;
         padding: 2em;
     }
@@ -157,7 +171,7 @@ const notificationsStore = useNotificationsStore();
         background-color: inherit;
         font-size: 14pt;
         font-family: "Roboto Condensed", sans-serif;
-        width: 150px;
+        width: 190px;
         height: 50px;
         color: grey;
         padding: 10px;
