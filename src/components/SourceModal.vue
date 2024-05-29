@@ -69,7 +69,7 @@ const notificationsStore = useNotificationsStore();
             this.sourceData.author = value
         },
         setSourceFinal(value) {
-            this.sourceData.source = this.foundChannels.filter(ch => ch.id === value).title
+            this.sourceData.source = this.foundChannels.filter(ch => ch.id === value)[0]
         },
         async checkSource() {
             if(!this.sourceData.source) {
@@ -86,9 +86,23 @@ const notificationsStore = useNotificationsStore();
             })
             const checked = await checkedSource.json();
             notificationsStore.setNotifications([{notifyTitle: 'Поиск каналов', notifyMessage: checked.message}]);
-            console.log('CHECKED->', checked);
             if (checked.success && checked.data.contacts?.chats?.length) {
-                this.foundChannels = checked.data.contacts.chats;
+                let channels = []
+                for (const chan of checked.data.contacts.chats) {
+                    channels.push({
+                        name: `${chan.title} @${chan.username}`,
+                        id: chan.id,
+                        title: chan.title,
+                        username: chan.username,
+                        fake: chan.fake,
+                        left: chan.left,
+                        scam: chan.scam,
+                        restricted: chan.restricted,
+                        verified: chan.verified,
+                        subscribers: chan.participants_count
+                    })
+                }
+                this.foundChannels = channels;
             } else {
                 notificationsStore.setNotifications([{notifyTitle: 'Поиск каналов', notifyMessage: `Каналов ${this.sourceData.source} не найдено`}]);
                 this.foundChannels = [];
@@ -106,10 +120,9 @@ const notificationsStore = useNotificationsStore();
                 body: JSON.stringify(this.sourceData)
             });
             let sourceApiResponse = await sourceApiData.json();
-            console.log('FAIL??', sourceApiResponse);
+            console.log('SAVE-SOURCE-RESPONSE->', sourceApiResponse);
             this.foundChannels = [];
             if (sourceApiResponse.success) {
-                console.log('SUCCESS', sourceApiResponse);
                 this.closeModal();
             }
             notificationsStore.setNotifications([{notifyTitle: sourceApiResponse.success, notifyMessage: sourceApiResponse.message}])
