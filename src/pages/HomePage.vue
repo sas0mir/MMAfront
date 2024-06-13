@@ -53,9 +53,14 @@
         <v-icon name="fa-globe-asia" class="home-box-icon"/>
         <h3>Новости</h3>
         <div class="homepage-theme-container">
-          <p>Тема "Доллар" поднялась в рейтинге на 5 пунктов (пример)</p>
-          <p>TO DO</p>
-          <p>В выдаче scrapper есть количество просмотров views у сообщения + чтобы провести поиск по каналу надо к аккауннейму добавить ?q="искомое"</p>
+          <div
+            class="homepage-news-row"
+            v-for="row of userInfo.journal"
+            :key="row.id"
+          >
+              <p>{{ row.data.message }}</p>
+              <p class="homepage-news-row-date">{{ row.createdAt }}</p>
+          </div>
         </div>
       </div>
       <div class="homepage-box-info">
@@ -314,7 +319,7 @@
   .homepage-theme-container {
     display: block;
     width: 100%;
-    max-height: 30vh;
+    max-height: 20vh;
     overflow: auto;
   }
   .homepage-theme-name {
@@ -334,6 +339,23 @@
   }
   .homepage-goto-btn:hover {
     color: rgb(65, 112, 200);
+  }
+  .homepage-news-row {
+    display: flex;
+    justify-content: space-between;
+    background-color: #ededed;
+    border-radius: 1vw;
+    padding: 1em;
+    margin-bottom: 1em;
+    align-items: center;
+  }
+  .homepage-news-row p {
+    margin: 0;
+  }
+  .homepage-news-row-date {
+    padding-left: 1em;
+    color: grey;
+    font-size: 10pt;
   }
   .homepage-rss {
     position: relative;
