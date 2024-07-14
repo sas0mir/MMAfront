@@ -4,13 +4,13 @@
       <div class="homepage-box-info">
         <v-icon name="fa-user" class="home-box-icon"/>
         <h3 v-if="userInfo.user">{{ userInfo.user.name }}</h3>
-        <text-field-view title="Организация" v-if="userInfo.organization" horizontal :value="userInfo.organization.name" />
-        <text-field-view title="Почта" :value="userEmail" horizontal />
-        <text-field-view title="Подписка" v-if="userInfo.subscription" :value="userSubscription" horizontal />
+        <text-field-view title="Company" v-if="userInfo.organization" horizontal :value="userInfo.organization.name" />
+        <text-field-view title="Mail" :value="userEmail" horizontal />
+        <text-field-view title="Subscription" v-if="userInfo.subscription" :value="userSubscription" horizontal />
       </div>
       <div class="homepage-box-info">
         <v-icon name="fa-bolt" class="home-box-icon"/>
-        <h3>Ваши темы:</h3>
+        <h3>Your themes</h3>
         <div class="homepage-theme-container">
           <div
             class="homepage-theme-name"
@@ -27,31 +27,31 @@
           class="homepage-button"
           :disabled="userInfo.subscription === 1"
           v-on:click="addTheme">
-            Добавить тему
+            Add theme
         </button>
       </div>
       <div class="homepage-box-info">
         <v-icon name="fa-bell" class="home-box-icon"/>
-        <h3>Ваши подписки:</h3>
+        <h3>Your subscriptions</h3>
         <div class="homepage-theme-container">
           <div
             class="homepage-theme-name"
             v-for="source of userInfo.sources"
             :key="source.id"
           >
-              <span>{{ `Канал: ${source.name} (@${source.account_name}), Платформа: ${userInfo.platforms[source.platform - 1].name}` }}</span>
+              <span>{{ `Channel: ${source.name} (@${source.account_name}), Platform: ${userInfo.platforms[source.platform - 1].name}` }}</span>
           </div>
         </div>
         <button
           class="homepage-button"
           :disabled="userInfo.subscription === 1"
           v-on:click="addSource">
-            Добавить подписку
+            Add subscription
         </button>
       </div>
       <div class="homepage-box-info">
         <v-icon name="fa-globe-asia" class="home-box-icon"/>
-        <h3>Новости</h3>
+        <h3>Logs</h3>
         <div class="homepage-theme-container">
           <div
             class="homepage-news-row"
@@ -65,16 +65,16 @@
       </div>
       <div class="homepage-box-info">
         <v-icon name="fa-book-open" class="home-box-icon"/>
-        <h3>Лента ваших каналов:</h3>
+        <h3>Your feed</h3>
         <div class="homepage-rss-container">
           <div class="homepage-rss-left">
             <div v-for="channel in latestMessages" :key="channel.length" class="homepage-rss-channel">
-              <button class="homepage-rss-btn" v-if="channel.length" v-on:click="selectRssChannel(channel)"><img :src="channel[0]?.user_photo" :alt="channel[0]?.user_name" />{{ channel[0]?.user_name }}</button>
+              <button :class="rssButtonClass(channel[0].user_name)" v-if="channel.length" v-on:click="selectRssChannel(channel)"><img :src="channel[0]?.user_photo" :alt="channel[0]?.user_name" />{{ channel[0]?.user_name }}</button>
             </div>
           </div>
           <div class="homepage-rss-right">
             <div class="homepage-rss-post" v-for="post of activeRssChannel" :key="post.views">
-              <p class="homepage-rss-post-title">{{`${post.datetime} Просмотры:${post.views}`}}</p>
+              <p class="homepage-rss-post-title">{{`${post.datetime} Views:${post.views}`}}</p>
               <img class="homepage-rss-post-img" v-if="post.message_photo.length" :src="post.message_photo[0]" :alt="post.data_post" />
               <video class="homepage-rss-post-video" v-if="post.message_video.length" :src="post.message_video[0]" controls>{{ post.data_post }}</video>
               <p class="homepage-rss-post-text">{{post.message_text || post.message_url}}</p>
@@ -85,7 +85,7 @@
       </div>
       <div class="homepage-box-info">
         <v-icon name="fa-cloud" class="home-box-icon"/>
-        <h3>Облако ваших тегов:</h3>
+        <h3>Tag cloud</h3>
         <vue-word-cloud
           style="
             height: 400px;
@@ -214,6 +214,10 @@
       },
       selectRssChannel(channel) {
         this.activeRssChannel = channel
+      },
+      rssButtonClass(channelName) {
+        console.log('000->', channelName === this.activeRssChannel[0].user_name);
+        return channelName === this.activeRssChannel[0].user_name ? 'homepage-rss-btn-selected' : 'homepage-rss-btn'
       }
     },
     async beforeMount() {
@@ -254,7 +258,6 @@
             }
           }
         }
-        console.log('WORDS-CLOUD->', cloud);
         return cloud
       }
     }
@@ -396,7 +399,24 @@
     display: flex;
     align-items: center;
   }
-  .homepage-rss-btn img {
+  .homepage-rss-btn:hover {
+    background-color: #fdfdfd;
+  }
+  .homepage-rss-btn-selected {
+    width: 100%;
+    padding: 0;
+    border-radius: 1vw;
+    font-size: 12pt;
+    font-family: "Roboto Condensed", sans-serif;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    color: white;
+    background-color: rgb(65, 112, 200);
+  }
+  .homepage-rss-btn img, .homepage-rss-btn-selected img {
     width: 1vw;
     border-radius: 50%;
     margin-right: 1em;

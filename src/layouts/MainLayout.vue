@@ -2,9 +2,9 @@
   <div class="main-header-box">
     <ul class="main-header-container">
       <img src="../assets/i_novus_logo-removebg-preview.png" class="main-header-logo"/>
-      <li class="main-header-link"><v-link href="/">Стартовая страница</v-link></li>
-      <li class="main-header-link"><v-link href="/dashboard">Дэшборд</v-link></li>
-      <li class="main-header-link"><v-link href="/settings">Настройки</v-link></li>
+      <li class="main-header-link"><v-link href="/">Start page</v-link></li>
+      <li class="main-header-link"><v-link href="/dashboard">Dashboard</v-link></li>
+      <li class="main-header-link"><v-link href="/settings">Settings</v-link></li>
     </ul>
     <div class="main-header-container">
       <v-icon name="fa-instagram" hover animation="pulse" speed="fast" v-on:click="handleIconClick('instagram')"/>

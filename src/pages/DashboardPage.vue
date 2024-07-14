@@ -2,39 +2,78 @@
     <main-layout>
       <h3 class="dashboard-title">{{ selectedTheme }}</h3>
       <div class="dash-container">
-        <vidget-user title="Упоминания"></vidget-user>
-        <vidget-user title="Источники"></vidget-user>
-        <vidget-user title="Графики"></vidget-user>
-        <p v-if="themes.length">{{ themes[0] }}</p>
-        <button v-on:click="handleBtnClick">Themes query</button>
+        <div class="dash-vidgets">
+          <vidget-user title="Упоминания"></vidget-user>
+          <vidget-user title="Источники"></vidget-user>
+          <vidget-user title="Графики"></vidget-user>
+          <p v-if="themes.length">{{ themes[0] }}</p>
+          <button v-on:click="handleBtnClick">Themes query</button>
+        </div>
+        <div class="dash-sidebar"></div>
       </div>
+      <notification-component :show="showNotification" :title="activeNotify.notifyTitle" :message="activeNotify.notifyMessage"/>
     </main-layout>
 </template>
   
 <script>
   import MainLayout from '../layouts/MainLayout.vue'
-  //import { useSessionStore } from '@/stores/SessionStore';
   import { useThemesStore } from '@/stores/ThemesStore';
+  import { useNotificationsStore } from '@/stores/NotificationStore';
+  import { useSessionStore } from '@/stores/SessionStore';
   import VidgetUser from '@/components/VidgetUser.vue';
+  import NotificationComponent from '@/components/NotificationComponent.vue';
 
-  //const sessionStore = useSessionStore()
-  const themesStore = useThemesStore()
+  const sessionStore = useSessionStore()
+  const themesStore = useThemesStore();
+  const notificationsStore = useNotificationsStore();
   
   export default {
     components: {
       MainLayout,
-        VidgetUser
+      VidgetUser,
+      NotificationComponent
     },
     props: {
 
     },
     data() {
       return {
-        themes: []
+        showNotification: false,
+        activeNotify: { loaded: false },
+        vidgets: []
       }
+    },
+    watch: {
+      showNotification(newValue, oldValue) {
+        if(newValue && newValue !== oldValue) {
+          setTimeout(() => {
+            this.showNotification = false
+            notificationsStore.clearActive()
+          }, 2000)
+        }
+      },
+      activeNotify(newValue, oldValue) {
+        if(newValue && newValue !== oldValue) {
+          this.showNotification = true
+        }
+      }
+    },
+    async beforeMount() {
+      notificationsStore.$subscribe((mutations, state) => {
+        if (state.active) {
+          this.activeNotify = state.active;
+          this.showNotification = true;
+        }
+      });
+      const vidgets = await fetch(`${process.env.VUE_APP_BACK_URL}/api/vidgets`, {
+        method: 'GET'
+      });
+      this.vidgets = vidgets;
     },
     async mounted() {
       console.log('THEMES-STORE->', themesStore.getSelected, themesStore.$state.selected);
+      console.log('STORES->', sessionStore.$state, notificationsStore.$state);
+      notificationsStore.setNotifications([{notifyTitle: 'Mounted', notifyMessage: 'Test notification mount dashboard'}]);
       // const ddResp = await fetch('http://localhost:3000/api/ddata', {
       //   method: 'POST',
       //   headers: { "Content-Type": "application/json" },
