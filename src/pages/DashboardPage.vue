@@ -40,7 +40,8 @@
       return {
         showNotification: false,
         activeNotify: { loaded: false },
-        vidgets: []
+        vidgets: [],
+        themes: []
       }
     },
     watch: {

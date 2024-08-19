@@ -199,7 +199,6 @@
         });
         let userApiInfo = await userApiData.json();
         notificationsStore.setNotifications([{notifyTitle: userApiInfo.success, notifyMessage: userApiInfo.message}]);
-        console.log('HOME-USERDATA->', userApiInfo.data);
         return { ...userApiInfo.data, loaded: true }
       },
       async loadRss() {
@@ -207,8 +206,6 @@
           method: 'GET'
         })
         let rssApiInfo = await rssApiData.json();
-        //const rss = await rssApiInfo.data.json();
-        console.log('RSS-API-DATA->', rssApiInfo);
         notificationsStore.setNotifications([{notifyTitle: rssApiInfo.success, notifyMessage: rssApiInfo.message}]);
         return { ...rssApiInfo.data, loaded: true }
       },
@@ -216,7 +213,6 @@
         this.activeRssChannel = channel
       },
       rssButtonClass(channelName) {
-        console.log('000->', channelName === this.activeRssChannel[0].user_name);
         return channelName === this.activeRssChannel[0].user_name ? 'homepage-rss-btn-selected' : 'homepage-rss-btn'
       }
     },
@@ -258,6 +254,7 @@
             }
           }
         }
+        console.log('CLOUD->', cloud, this.userInfo.themes);
         return cloud
       }
     }
@@ -277,16 +274,16 @@
   .homepage-box-info {
     position: relative;
     display: block;
-    /* min-width: 45%; */
     max-width: 35%;
     padding: 1em;
     margin: 1em;
     text-align: center;
     background-color: rgb(187, 186, 186);
-    /* background: linear-gradient(180deg, rgba(57,57,57,0.7049194677871149) 0%, rgba(157,157,157,0.5760679271708684) 30%, rgba(237,237,237,0.2959558823529411) 100%); */
     border-radius: 1vw;
     min-height: 20%;
     max-height: 35%;
+    overflow: scroll;
+    resize: both;
   }
   .home-box-icon {
     position: absolute;

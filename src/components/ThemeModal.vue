@@ -84,22 +84,33 @@ const notificationsStore = useNotificationsStore();
                 notificationsStore.setNotifications([{notifyTitle: 'Ошибка', notifyMessage: 'Обязательное поле Наименование темы не заполнено'}]);
                 return
             }
-            this.themeData.user_id = sessionStore.getUserData.id;
-            let userThemes = sessionStore.getUserData.themes;
-            userThemes.push(this.themeData.name);
-            this.themeData.user_themes = userThemes;
-            console.log('CREATE-THEME-START->', this.themeData);
-            const themeApiData = await fetch(`${process.env.VUE_APP_BACK_URL}/api/theme_create`, {
+            const test = await fetch(`${process.env.VUE_APP_BACK_URL}/api/telegram-search-global`, {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(this.themeData)
+                body: JSON.stringify({
+                    query:  this.themeData.name,
+                    limit: 10
+                })
             });
-            let themeApiResponse = await themeApiData.json();
-            console.log('CREATE-THEME-RESPONSE->', themeApiResponse);
-            if (themeApiResponse.success) {
-                this.closeModal()
-            }
-            notificationsStore.setNotifications([{notifyTitle: themeApiResponse.success, notifyMessage: themeApiResponse.message}])
+            let bbb = sessionStore.getUserData.id;
+            const checked = await test.json();
+            console.log('TEST->', bbb, checked);
+            // this.themeData.user_id = sessionStore.getUserData.id;
+            // let userThemes = sessionStore.getUserData.themes;
+            // userThemes.push(this.themeData.name);
+            // this.themeData.user_themes = userThemes;
+            // console.log('CREATE-THEME-START->', this.themeData);
+            // const themeApiData = await fetch(`${process.env.VUE_APP_BACK_URL}/api/theme_create`, {
+            //     method: 'POST',
+            //     headers: { "Content-Type": "application/json" },
+            //     body: JSON.stringify(this.themeData)
+            // });
+            // let themeApiResponse = await themeApiData.json();
+            // console.log('CREATE-THEME-RESPONSE->', themeApiResponse);
+            // if (themeApiResponse.success) {
+            //     this.closeModal()
+            // }
+            // notificationsStore.setNotifications([{notifyTitle: themeApiResponse.success, notifyMessage: themeApiResponse.message}])
         }
     },
     computed: {
